@@ -1,16 +1,16 @@
-import { Feed } from "@/components/Feed";
+import { Backlog } from "@/components/Backlog";
+import { LiveFeed } from "@/components/LiveFeed";
+import { InputBox } from "@/components/InputBox";
 
-async function sleep(ms: number){
-  return new Promise(r => setTimeout(r, ms))
-}
+// export const dynamic = "force-dynamic"
 
-export default async function Chat() {
-
-  // await sleep(5000)
+export default function Chat() {
 
   return (
     <div>
-      <Feed />
+      {/* <LiveFeed /> */}
+      <Backlog />
+      <InputBox />
     </div>
   )
 }

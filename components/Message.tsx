@@ -1,6 +1,12 @@
 "use client"
 
-export const Message = () => {
+import { Msg } from "@/types"
+
+type MessageProps = {
+  message: Msg
+}
+
+export const Message = ({message}: MessageProps) => {
   return (
     <div>Message</div>
   )

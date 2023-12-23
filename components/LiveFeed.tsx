@@ -1,41 +1,39 @@
 "use client"
 import { typedCollectionRef } from "@/lib/firebase-utils"
-import { Message } from "@/types"
+import { Msg } from "@/types"
 import { onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
+import { Message } from "@/components/Message"
 
-export const Feed = () => {
+export const LiveFeed = () => {
 
   const [isLoading, setIsLoading] = useState(true)
+  const [messages, setMessages] = useState<Msg[]>([])
 
   function snap(){
 
-    const messageColRef = typedCollectionRef<Message>("messages")
+    const messageColRef = typedCollectionRef<Msg>("messages")
 
     return (
       onSnapshot(messageColRef, (snapshot)=>{
-        snapshot.forEach((doc)=>{
-          const docData = doc.data()
-          console.log(docData.id, docData.data)
+        let messages: Msg[] = []
+        snapshot.forEach((docSnap)=> {
+          messages.push(docSnap.data())
         })
+        setMessages(messages)
       })
     )
   }
 
   useEffect(()=>{
-    
-    // const unsub = onSnapshot(collection(db, "messages"), (snapshot)=>{
-    //   snapshot.forEach((doc)=>{
-    //     console.log(doc.data())
-    //   })
-    // })
 
     const unsub = snap()
+    window.addEventListener("beforeunload", unsub)
 
     setIsLoading(false)
 
     return () => {
-      console.log("cleanup called...")
+      window.removeEventListener("beforeunload", unsub)
       unsub()
     }
 
@@ -45,7 +43,7 @@ export const Feed = () => {
 
   return (
     <div>
-      FEED
+      LIVE FEED....
     </div>
   )
 }
