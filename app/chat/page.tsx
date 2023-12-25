@@ -1,16 +1,15 @@
 import { Backlog } from "@/components/Backlog";
 import { LiveFeed } from "@/components/LiveFeed";
 import { InputBox } from "@/components/InputBox";
-
-// export const dynamic = "force-dynamic"
+import Link from "next/link";
 
 export default function Chat() {
-
   return (
     <div>
-      {/* <LiveFeed /> */}
       <Backlog />
+      <LiveFeed />
       <InputBox />
+      <Link href={"/"}>BACK</Link>
     </div>
-  )
+  );
 }
