@@ -4,16 +4,13 @@ import { typedCollectionRef } from "@/lib/firebase-utils";
 import { Msg } from "@/types";
 import {
   DocumentData,
-  Query,
   QueryDocumentSnapshot,
-  Unsubscribe,
   getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
   startAfter,
-  where,
 } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 
