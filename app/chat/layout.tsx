@@ -1,4 +1,5 @@
 import { ChatProvider } from "@/components/providers/chatProvider";
+import { SoundProvider } from "@/components/providers/soundProvider";
 
 export default function ChatLayout({
   children,
@@ -8,7 +9,9 @@ export default function ChatLayout({
   return (
     <div>
       CHAT ROOM LAYOUT
-      <ChatProvider>{children}</ChatProvider>
+      <ChatProvider>
+        <SoundProvider>{children}</SoundProvider>
+      </ChatProvider>
     </div>
   );
 }
