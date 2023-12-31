@@ -46,6 +46,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const q = query(messagesCollection, orderBy("timestamp", "desc"), limit(5));
     const snapshot = await getDocs(q);
 
+    if (snapshot.empty) return;
+
     const firstVisibleDoc = snapshot.docs[0];
     const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
     setLastVisible(lastVisibleDoc);
@@ -56,6 +58,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function getNextBatch() {
+    if (!lastVisible) return;
+
     const q = query(
       messagesCollection,
       orderBy("timestamp", "desc"),
@@ -73,13 +77,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   function attachChatListener() {
     console.log("[Listener] adding listener...");
+
     const q = query(
       messagesCollection,
       orderBy("timestamp", "asc"),
-      startAfter(firstVisible)
+      startAfter(firstVisible ? firstVisible : new Date().getTime())
     );
+
     return onSnapshot(q, (snapshot) => {
-      console.log("[Listener] onsnap ran");
       let messages: Msg[] = [];
       snapshot.forEach((docSnap) => {
         messages.push(docSnap.data());
@@ -94,8 +99,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!firstVisible) return;
-
+    if (isBacklogLoading) return;
     const unsub = attachChatListener();
     window.addEventListener("beforeunload", unsub);
     setIsFeedLoading(false);
@@ -104,7 +108,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener("beforeunload", unsub);
       unsub();
     };
-  }, [firstVisible]);
+  }, [firstVisible, isBacklogLoading]);
 
   return (
     <ChatContext.Provider
