@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSoundContext } from "./providers/soundProvider";
+import { useSoundContext } from "@/components/providers/soundProvider";
 
 
 type AudioBaseProps = {
@@ -9,30 +9,31 @@ type AudioBaseProps = {
 };
 
 export const AudioBase = ({ audioPath }: AudioBaseProps) => {
-  const { audioCtxRef, getSound } = useSoundContext();
+  const { audioCtxRef, getSound, playSound } = useSoundContext();
 
-  const [soundBuffer, setSoundBuffer] = useState<AudioBuffer | null>(null);
+  // const [soundBuffer, setSoundBuffer] = useState<AudioBuffer | null>(null);
 
-  async function playSound() {
-    if (!audioCtxRef.current) return;
+  // async function playSound() {
+  //   if (!audioCtxRef.current) return;
+  //   audioCtxRef.current.resume()
 
-    const soundNode = audioCtxRef.current.createBufferSource();
-    soundNode.buffer = soundBuffer
-      ? soundBuffer
-      : await (async function () {
-          const buffer = await getSound(audioPath);
-          setSoundBuffer(buffer);
-          return buffer;
-        })();
+  //   const soundNode = audioCtxRef.current.createBufferSource();
+  //   soundNode.buffer = soundBuffer
+  //     ? soundBuffer
+  //     : await (async function () {
+  //         const buffer = await getSound(audioPath);
+  //         setSoundBuffer(buffer);
+  //         return buffer;
+  //       })();
 
-    soundNode.connect(audioCtxRef.current.destination);
-    soundNode.start();
-  }
+  //   soundNode.connect(audioCtxRef.current.destination);
+  //   soundNode.start();
+  // }
 
   return (
     <div>
       AUDIOBASE
-      <button onClick={playSound}>PLAY</button>
+      <button onClick={()=> playSound(audioPath)}>PLAY</button>
     </div>
   );
 };
