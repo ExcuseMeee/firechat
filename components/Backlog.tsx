@@ -1,5 +1,6 @@
 "use client"
 
+import { Message } from "./Message"
 import { useChatContext } from "./providers/chatProvider"
 
 export const Backlog = () => {
@@ -11,9 +12,7 @@ export const Backlog = () => {
   return (
     <div>
       {backlog.toReversed().map((message, i)=> (
-        <div key={i}>
-          {message.payload}
-        </div>
+        <Message key={i} message={message} />
       ))}
       <button onClick={getNextBatch}>NEXT</button>
     </div>

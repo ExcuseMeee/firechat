@@ -1,39 +1,37 @@
 "use client";
 
-import { useState } from "react";
 import { useSoundContext } from "@/components/providers/soundProvider";
 
-
 type AudioBaseProps = {
-  audioPath: string;
+  audioInfo: {
+    name: string;
+    src: string;
+  };
+  isInputSequence?: boolean;
 };
 
-export const AudioBase = ({ audioPath }: AudioBaseProps) => {
-  const { audioCtxRef, getSound, playSound } = useSoundContext();
+export const AudioBase = ({ audioInfo, isInputSequence = false }: AudioBaseProps) => {
+  const { playSound, inputSequence, setInputSequence } = useSoundContext();
 
-  // const [soundBuffer, setSoundBuffer] = useState<AudioBuffer | null>(null);
-
-  // async function playSound() {
-  //   if (!audioCtxRef.current) return;
-  //   audioCtxRef.current.resume()
-
-  //   const soundNode = audioCtxRef.current.createBufferSource();
-  //   soundNode.buffer = soundBuffer
-  //     ? soundBuffer
-  //     : await (async function () {
-  //         const buffer = await getSound(audioPath);
-  //         setSoundBuffer(buffer);
-  //         return buffer;
-  //       })();
-
-  //   soundNode.connect(audioCtxRef.current.destination);
-  //   soundNode.start();
-  // }
+  function addSoundToSequence(src: string) {
+    const sequence = [...inputSequence, src];
+    console.log("[addSoundToSequence] setting new sequence ", sequence);
+    setInputSequence(sequence);
+  }
 
   return (
     <div>
-      AUDIOBASE
-      <button onClick={()=> playSound(audioPath)}>PLAY</button>
+      AUDIOBASE {audioInfo.name}
+      {!isInputSequence && (
+        <button
+          onClick={() => {
+            playSound(audioInfo.src);
+            addSoundToSequence(audioInfo.src);
+          }}
+        >
+          PLAY
+        </button>
+      )}
     </div>
   );
 };

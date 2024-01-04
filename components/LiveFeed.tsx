@@ -1,5 +1,6 @@
 "use client"
-import { useChatContext } from "./providers/chatProvider"
+import { Message } from "@/components/Message"
+import { useChatContext } from "@/components/providers/chatProvider"
 
 export const LiveFeed = () => {
   
@@ -11,9 +12,7 @@ export const LiveFeed = () => {
     <div>
       LIVE FEED....
       {feed.map((message, i)=>(
-        <div key={i}>
-          {message.payload}
-        </div>
+        <Message key={i} message={message} />
       ))}
     </div>
   )

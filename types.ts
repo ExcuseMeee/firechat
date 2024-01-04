@@ -1,5 +1,5 @@
 export type Msg = {
   senderId: string;
-  payload: string;
+  payload: string[];
   timestamp: number;
 }

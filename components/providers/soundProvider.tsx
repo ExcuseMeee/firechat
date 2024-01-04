@@ -3,11 +3,14 @@
 import { storage } from "@/firebaseConfig";
 import { getDownloadURL, ref } from "firebase/storage";
 import {
+  Dispatch,
   MutableRefObject,
+  SetStateAction,
   createContext,
   useContext,
   useEffect,
   useRef,
+  useState,
 } from "react";
 
 type SoundContextType = {
@@ -15,6 +18,8 @@ type SoundContextType = {
   getSound: (src: string) => Promise<AudioBuffer | null>;
   playSound: (src: string) => Promise<void>;
   playSoundSequence: (sequence: string[]) => Promise<void>;
+  inputSequence: string[];
+  setInputSequence: Dispatch<SetStateAction<string[]>>
 };
 
 const SoundContext = createContext<SoundContextType | null>(null);
@@ -23,6 +28,8 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const savedBuffers = useRef(new Map<string, AudioBuffer>());
+
+  const [inputSequence, setInputSequence] = useState<string[]>([]);
 
   useEffect(() => {
     const ctx = new AudioContext();
@@ -66,10 +73,11 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
     let currentIndex = 0;
 
+    // TODO: optimize by pulling unfetched buffers to a Set, then fetching from there. prevents duplicate fetches for the same audio
     const bufferSequence = await Promise.all(
       sequence.map(async (src) => {
         const buffer = savedBuffers.current.has(src)
-          ? savedBuffers.current.get(src) as AudioBuffer
+          ? (savedBuffers.current.get(src) as AudioBuffer)
           : await getSound(src);
         return buffer;
       })
@@ -78,18 +86,11 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     function playNextNode() {
       if (currentIndex > bufferSequence.length - 1) return;
 
-      console.log(
-        `[playNextNode] playing buffer ${currentIndex} of ${
-          bufferSequence.length - 1
-        }`
-      );
-
       const audioNode = audioCtxRef.current!.createBufferSource();
-      const audioBuffer = bufferSequence.at(currentIndex)
-      if(!audioBuffer){
-        console.log(`[playNextNode] invalid buffer encountered, skipping...`)
-        currentIndex++
-        playNextNode()
+      const audioBuffer = bufferSequence.at(currentIndex);
+      if (!audioBuffer) {
+        currentIndex++;
+        playNextNode();
         return;
       }
       audioNode.buffer = audioBuffer;
@@ -107,7 +108,14 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <SoundContext.Provider
-      value={{ audioCtxRef, getSound, playSound, playSoundSequence }}
+      value={{
+        audioCtxRef,
+        getSound,
+        playSound,
+        playSoundSequence,
+        inputSequence,
+        setInputSequence,
+      }}
     >
       {children}
     </SoundContext.Provider>

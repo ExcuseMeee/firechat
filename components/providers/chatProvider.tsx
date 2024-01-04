@@ -25,7 +25,8 @@ type ChatContextType = {
 const ChatContext = createContext<ChatContextType | null>(null);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  const messagesCollection = typedCollectionRef<Msg>("messages");
+  // const messagesCollection = typedCollectionRef<Msg>("messages");
+  const messagesCollection = typedCollectionRef<Msg>("test");
 
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<
     Msg,

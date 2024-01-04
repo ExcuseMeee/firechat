@@ -1,30 +1,43 @@
-"use client"
+"use client";
 
-import { typedCollectionRef } from "@/lib/firebase-utils"
-import { Button } from "./ui/button"
-import { Msg } from "@/types"
-import { Input } from "./ui/input"
-import { useState } from "react"
-import { addDoc } from "firebase/firestore"
+import { typedCollectionRef } from "@/lib/firebase-utils";
+import { Button } from "@/components/ui/button";
+import { Msg} from "@/types";
+import { useState } from "react";
+import { addDoc } from "firebase/firestore";
+import { useSoundContext } from "@/components/providers/soundProvider";
+import { AudioBase } from "@/components/AudioBase";
+import { getFileName } from "@/lib/sounds";
 
 export const InputBox = () => {
+  const { inputSequence, setInputSequence, playSoundSequence } = useSoundContext();
 
-  const [thing, setThing] = useState("")
-
-  async function addMessage(){
-    const messagesCollection = typedCollectionRef<Msg>("messages")
-    await addDoc(messagesCollection, {
-      senderId: "fakeid",
-      payload: thing,
+  async function sendMessage() {
+    if(inputSequence.length === 0) return;
+    const messageCollection = typedCollectionRef<Msg>("test")
+    await addDoc(messageCollection, {
+      senderId: "TESTING",
+      payload: inputSequence,
       timestamp: new Date().getTime()
     })
-    console.log("message added")
+
+  }
+
+  function removeSound(index: number){
+    const sequence = inputSequence.filter((src, i) => index !== i);
+    console.log("[removeSound] setting new sequence ", sequence);
+    setInputSequence(sequence);
   }
 
   return (
-    <div>
-      <Input onChange={(e)=> setThing(e.target.value)} value={thing} />
-      <Button onClick={addMessage}>Add</Button>
+    <div className="border border-green-500">
+      {inputSequence.map((src, i)=>(
+        <div key={i} onClick={()=> removeSound(i)}>
+          <AudioBase isInputSequence audioInfo={{src, name: getFileName(src)}} />
+        </div>
+      ))}
+      <Button onClick={sendMessage}>Add</Button>
+      <Button onClick={()=> playSoundSequence(inputSequence)}>Preview</Button>
     </div>
-  )
-}
+  );
+};
