@@ -19,7 +19,7 @@ type SoundContextType = {
   playSound: (src: string) => Promise<void>;
   playSoundSequence: (sequence: string[]) => Promise<void>;
   inputSequence: string[];
-  setInputSequence: Dispatch<SetStateAction<string[]>>
+  setInputSequence: Dispatch<SetStateAction<string[]>>;
 };
 
 const SoundContext = createContext<SoundContextType | null>(null);
@@ -73,15 +73,38 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
     let currentIndex = 0;
 
-    // TODO: optimize by pulling unfetched buffers to a Set, then fetching from there. prevents duplicate fetches for the same audio
+    const fetchedMissing = await getMissing();
+
     const bufferSequence = await Promise.all(
       sequence.map(async (src) => {
         const buffer = savedBuffers.current.has(src)
           ? (savedBuffers.current.get(src) as AudioBuffer)
+          : fetchedMissing?.has(src)
+          ? (fetchedMissing.get(src) as AudioBuffer)
           : await getSound(src);
         return buffer;
       })
     );
+
+    playNextNode();
+
+    async function getMissing() {
+      const missingBuffers = sequence.filter(
+        (src) => !savedBuffers.current.has(src)
+      );
+      if (missingBuffers.length === 0) return null;
+
+      const uniqueMissingBuffers = Array.from(new Set(missingBuffers));
+
+      const fetchedMissing = await Promise.all(
+        uniqueMissingBuffers.map(
+          async (missingSrc) =>
+            [missingSrc, await getSound(missingSrc)] as const
+        )
+      );
+      const fetchedMissingMap = new Map(fetchedMissing);
+      return fetchedMissingMap;
+    }
 
     function playNextNode() {
       if (currentIndex > bufferSequence.length - 1) return;
@@ -102,8 +125,6 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
         playNextNode();
       };
     }
-
-    playNextNode();
   }
 
   return (
