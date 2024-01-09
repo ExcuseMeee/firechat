@@ -1,10 +1,10 @@
 "use client";
 
-import { Msg} from "@/types";
+import { Msg } from "@/types";
 import { useSoundContext } from "@/components/providers/soundProvider";
 
 type MessageProps = {
-  message: Msg
+  message: Msg;
 };
 
 export const Message = ({ message }: MessageProps) => {
@@ -13,7 +13,7 @@ export const Message = ({ message }: MessageProps) => {
   return (
     <div>
       Message: {message.payload}
-      <button onClick={()=> playSoundSequence(message.payload)}>Play</button>
+      <button onClick={() => playSoundSequence(message.payload)}>Play</button>
     </div>
-  )
+  );
 };
