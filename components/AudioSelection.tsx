@@ -5,7 +5,7 @@ export const AudioSelection = () => {
   return (
     <div className="border border-blue-500">
       {Object.values(soundPaths).map((src, i) => (
-        <AudioBase key={i} src={src} index={i} />
+        <AudioBase key={i} src={src} type={"selection"} index={i} />
       ))}
     </div>
   );

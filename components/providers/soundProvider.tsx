@@ -121,6 +121,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       audioNode.start();
 
       audioNode.onended = () => {
+        // TODO: Track when sequence ends
         currentIndex++;
         playNextNode();
       };

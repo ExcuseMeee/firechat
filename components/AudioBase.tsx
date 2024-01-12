@@ -15,34 +15,31 @@ import {
 
 type AudioBaseProps = {
   src: string;
+  type: "selection" | "input" | "message";
   index?: number;
-  isInputSequence?: boolean;
 };
 
-export const AudioBase = ({
-  src,
-  index,
-  isInputSequence = false,
-}: AudioBaseProps) => {
+export const AudioBase = ({ src, index, type }: AudioBaseProps) => {
   const audioName = getFileName(src);
 
   const { playSound, inputSequence, setInputSequence } = useSoundContext();
 
   function addSoundToSequence(src: string) {
+    if (type !== "selection") return;
     const sequence = [...inputSequence, src];
     console.log("[addSoundToSequence] setting new sequence ", sequence);
     setInputSequence(sequence);
   }
 
   function removeSoundFromSequence(idx: number | undefined) {
-    if (!idx) return;
+    if (idx === undefined || type !== "input") return;
     const sequence = inputSequence.filter((src, i) => idx !== i);
     console.log("[removeSound] setting new sequence ", sequence);
     setInputSequence(sequence);
   }
 
   function handleClick() {
-    if (isInputSequence) return;
+    if (type !== "selection") return;
     playSound(src);
     addSoundToSequence(src);
   }
@@ -51,24 +48,26 @@ export const AudioBase = ({
     <ContextMenu>
       <ContextMenuTrigger>
         <Button onClick={handleClick} variant={"outline"} size={"icon"}>
-          <AudioLines className="" />
+          <AudioLines />
         </Button>
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuLabel>{audioName}</ContextMenuLabel>
         <ContextMenuSeparator />
         <ContextMenuItem onClick={() => playSound(src)}>
-          Preview Sound
+          Play Sound
         </ContextMenuItem>
-        {isInputSequence ? (
-          <ContextMenuItem onClick={() => removeSoundFromSequence(index)}>
-            Remove Sound
-          </ContextMenuItem>
-        ) : (
+        {type === "selection" ? (
           <ContextMenuItem onClick={() => addSoundToSequence(src)}>
             Add Sound
           </ContextMenuItem>
-        )}
+        ) : type === "input" ? (
+          <ContextMenuItem onClick={() => removeSoundFromSequence(index)}>
+            Remove Sound
+          </ContextMenuItem>
+        ) : type === "message" ? (
+          <ContextMenuItem>Placeholder</ContextMenuItem>
+        ) : null}
       </ContextMenuContent>
     </ContextMenu>
   );

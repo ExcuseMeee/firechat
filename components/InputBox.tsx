@@ -26,11 +26,12 @@ export const InputBox = () => {
     <div className="border border-green-500">
       <div>
         {inputSequence.map((src, i) => (
-          <AudioBase key={i} isInputSequence src={src} index={i} />
+          <AudioBase key={i} src={src} type={"input"} index={i} />
         ))}
       </div>
       <Button onClick={sendMessage}>Post</Button>
       <Button onClick={() => playSoundSequence(inputSequence)}>Preview</Button>
+      <Button onClick={() => setInputSequence([])}>Clear</Button>
     </div>
   );
 };
