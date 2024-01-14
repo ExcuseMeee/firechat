@@ -1,12 +1,14 @@
 import { soundPaths } from "@/lib/sounds";
-import { AudioBase } from "./AudioBase";
+import { AudioBase } from "@/components/AudioBase";
 
 export const AudioSelection = () => {
   return (
-    <div className="border border-blue-500">
-      {Object.values(soundPaths).map((src, i) => (
-        <AudioBase key={i} src={src} type={"selection"} index={i} />
-      ))}
-    </div>
+    <section className="border border-blue-500 w-1/6">
+      <div className="border flex items-center">
+        {Object.values(soundPaths).map((src, i) => (
+          <AudioBase key={i} src={src} type={"selection"} index={i} />
+        ))}
+      </div>
+    </section>
   );
 };

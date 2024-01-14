@@ -2,8 +2,7 @@
 
 import { useSoundContext } from "@/components/providers/soundProvider";
 import { getFileName } from "@/lib/sounds";
-import { Button } from "./ui/button";
-import { AudioLines } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -12,6 +11,7 @@ import {
   ContextMenuLabel,
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 type AudioBaseProps = {
   src: string;
@@ -39,16 +39,21 @@ export const AudioBase = ({ src, index, type }: AudioBaseProps) => {
   }
 
   function handleClick() {
-    if (type !== "selection") return;
-    playSound(src);
-    addSoundToSequence(src);
+    if (type === "selection") {
+      playSound(src);
+      addSoundToSequence(src);
+    } else if (type === "input") {
+      removeSoundFromSequence(index);
+    } else {
+      return;
+    }
   }
 
   return (
     <ContextMenu>
       <ContextMenuTrigger>
         <Button onClick={handleClick} variant={"outline"} size={"icon"}>
-          <AudioLines />
+          <ImageWithFallback src={`/icons/${audioName}.png`} alt={audioName} height={30} width={30} />
         </Button>
       </ContextMenuTrigger>
       <ContextMenuContent>

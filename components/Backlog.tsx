@@ -1,7 +1,7 @@
 "use client"
 
-import { Message } from "./Message"
-import { useChatContext } from "./providers/chatProvider"
+import { Message } from "@/components/Message"
+import { useChatContext } from "@/components/providers/chatProvider"
 
 export const Backlog = () => {
   

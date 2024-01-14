@@ -1,6 +1,7 @@
 "use client";
 
 import { storage } from "@/firebaseConfig";
+import { soundPaths } from "@/lib/sounds";
 import { getDownloadURL, ref } from "firebase/storage";
 import {
   Dispatch,
@@ -86,7 +87,27 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       })
     );
 
-    playNextNode();
+    const interval = setInterval(() => {
+      if (currentIndex > bufferSequence.length - 1) {
+        console.log("[playSoundSequence] end of sequence");
+        clearInterval(interval);
+        return;
+      }
+      // console.log("[playSoundSequence] playing sound ", currentIndex);
+
+      const audioNode = audioCtxRef.current!.createBufferSource();
+      const audioBuffer = bufferSequence.at(currentIndex);
+      if (!audioBuffer) {
+        console.log("[playSoundSequence] null buffer, skipping");
+        currentIndex++;
+        return;
+      }
+      audioNode.buffer = audioBuffer;
+      audioNode.connect(audioCtxRef.current!.destination);
+      audioNode.start();
+
+      currentIndex++;
+    }, 500);
 
     async function getMissing() {
       const missingBuffers = sequence.filter(
@@ -97,35 +118,44 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       const uniqueMissingBuffers = Array.from(new Set(missingBuffers));
 
       const fetchedMissing = await Promise.all(
-        uniqueMissingBuffers.map(
-          async (missingSrc) =>
-            [missingSrc, await getSound(missingSrc)] as const
-        )
+        uniqueMissingBuffers.map(async (missingSrc) => {
+          if (Object.values(soundPaths).includes(missingSrc)) {
+            // missingSrc is valid source, fetch it
+            return [missingSrc, await getSound(missingSrc)] as const;
+          } else {
+            // missingSrc is not valid, don't bother fetching
+            return [missingSrc, null] as const;
+          }
+        })
       );
       const fetchedMissingMap = new Map(fetchedMissing);
       return fetchedMissingMap;
     }
 
-    function playNextNode() {
-      if (currentIndex > bufferSequence.length - 1) return;
+    // function playNextNode() {
+    //   if (currentIndex > bufferSequence.length - 1) return;
 
-      const audioNode = audioCtxRef.current!.createBufferSource();
-      const audioBuffer = bufferSequence.at(currentIndex);
-      if (!audioBuffer) {
-        currentIndex++;
-        playNextNode();
-        return;
-      }
-      audioNode.buffer = audioBuffer;
-      audioNode.connect(audioCtxRef.current!.destination);
-      audioNode.start();
+    //   const audioNode = audioCtxRef.current!.createBufferSource();
+    //   const audioBuffer = bufferSequence.at(currentIndex);
+    //   if (!audioBuffer) {
+    //     currentIndex++;
+    //     playNextNode();
+    //     return;
+    //   }
+    //   audioNode.buffer = audioBuffer;
+    //   audioNode.connect(audioCtxRef.current!.destination);
+    //   audioNode.start();
 
-      audioNode.onended = () => {
-        // TODO: Track when sequence ends
-        currentIndex++;
-        playNextNode();
-      };
-    }
+    //   audioNode.onended = () => {
+    //     // TODO: Track when sequence ends
+    //     currentIndex++;
+    //     if (currentIndex < sequence.length) {
+    //       playNextNode();
+    //     } else {
+    //       console.log("[playNextNode] sequence ended");
+    //     }
+    //   };
+    // }
   }
 
   return (

@@ -24,7 +24,7 @@ export const InputBox = () => {
 
   return (
     <div className="border border-green-500">
-      <div>
+      <div className="flex items-center">
         {inputSequence.map((src, i) => (
           <AudioBase key={i} src={src} type={"input"} index={i} />
         ))}
