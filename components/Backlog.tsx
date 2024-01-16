@@ -11,10 +11,10 @@ export const Backlog = () => {
 
   return (
     <div>
+      <button onClick={getNextBatch}>Load More</button>
       {backlog.toReversed().map((message, i)=> (
         <Message key={i} message={message} />
       ))}
-      <button onClick={getNextBatch}>NEXT</button>
     </div>
   )
 

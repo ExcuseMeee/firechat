@@ -52,8 +52,8 @@ export const AudioBase = ({ src, index, type }: AudioBaseProps) => {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Button onClick={handleClick} variant={"outline"} size={"icon"}>
-          <ImageWithFallback src={`/icons/${audioName}.png`} alt={audioName} height={30} width={30} />
+        <Button onClick={handleClick} variant={"ghost"} size={"icon"} className="flex items-center justify-center">
+          <ImageWithFallback src={`/icons/${audioName}.png`} alt={audioName} height={35} width={35} />
         </Button>
       </ContextMenuTrigger>
       <ContextMenuContent>

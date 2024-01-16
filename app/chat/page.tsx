@@ -9,7 +9,6 @@ export default function Chat() {
       <Backlog />
       <LiveFeed />
       <InputBox />
-      <Link href={"/"}>BACK</Link>
     </div>
   );
 }
