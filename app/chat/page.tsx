@@ -2,6 +2,7 @@ import { Backlog } from "@/components/Backlog";
 import { LiveFeed } from "@/components/LiveFeed";
 import { InputBox } from "@/components/InputBox";
 import Link from "next/link";
+import { SignIn } from "@/components/SignIn";
 
 export default function Chat() {
   return (
@@ -9,6 +10,8 @@ export default function Chat() {
       <Backlog />
       <LiveFeed />
       <InputBox />
+      <SignIn />
+      <Link href={"/"}>BACk</Link>
     </div>
   );
 }
