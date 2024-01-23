@@ -3,6 +3,7 @@ import { auth } from "@/firebaseConfig";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 
 export const SignIn = () => {
+  /*
   async function signIn() {
     if (auth.currentUser) {
       console.log("[signIn] user already signed in", auth.currentUser);
@@ -29,11 +30,12 @@ export const SignIn = () => {
       console.log("[logout] ", error);
     }
   }
+  */
 
   return (
     <div>
-      <button onClick={signIn}>Google Sign in</button>
-      <button onClick={logout}>Sign Out</button>
+      {/* <button onClick={signIn}>Google Sign in</button>
+      <button onClick={logout}>Sign Out</button> */}
     </div>
   );
 };
