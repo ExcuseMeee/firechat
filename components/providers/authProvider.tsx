@@ -13,6 +13,7 @@ import {
   useContext,
   useEffect,
   useRef,
+  useState,
 } from "react";
 
 type AuthContextType = {
