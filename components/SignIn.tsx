@@ -6,7 +6,7 @@ export const SignIn = () => {
 
   const {isLoading, user, login, logout} = useFireAuth()
 
-  // if(isLoading) return <div>HOOK LOADING....</div>
+  if(isLoading) return <div>HOOK LOADING....</div>
 
   return (
     <div>

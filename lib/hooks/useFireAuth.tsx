@@ -3,7 +3,6 @@ import { auth } from "@/firebaseConfig";
 import {
   GoogleAuthProvider,
   User,
-  onAuthStateChanged,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
@@ -16,16 +15,6 @@ export default function useFireAuth() {
     auth
       .authStateReady()
       .then(() => {
-        // onAuthStateChanged(auth, (authUser) => {
-        //   console.log("[onAuthStateChanged] ran");
-        //   if (authUser) {
-        //     console.log("[onAuthStateChanged] yes user");
-        //     setUser(authUser);
-        //   } else {
-        //     console.log("[onAuthStateChanged] no user");
-        //     setUser(null);
-        //   }
-        // });
         if (auth.currentUser) {
           console.log("yes user");
           setUser(auth.currentUser);
@@ -37,7 +26,22 @@ export default function useFireAuth() {
       .finally(() => {
         setIsLoading(false);
       });
+
+    return () => {
+      console.log("[cleanup] ran");
+    };
   }, []);
+
+  async function updateUser(){
+    await auth.authStateReady()
+    if(auth.currentUser){
+      console.log("[updateUser] yes user")
+      setUser(auth.currentUser)
+    }else{
+      console.log("[updateUser] no user")
+      setUser(null)
+    }
+  }
 
   async function login() {
     if (isLoading) {
@@ -66,7 +70,7 @@ export default function useFireAuth() {
     try {
       await signOut(auth);
       console.log("[logout] successful");
-      setUser(null)
+      setUser(null);
     } catch (error) {
       console.log("[logout] error ", error);
     }
@@ -76,6 +80,7 @@ export default function useFireAuth() {
     user,
     isLoading,
     login,
-    logout
+    logout,
+    updateUser,
   };
 }

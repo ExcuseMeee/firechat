@@ -1,10 +1,13 @@
 import { soundPaths } from "@/lib/sounds";
 import { AudioBase } from "@/components/AudioBase";
+import { HTMLAttributes } from "react";
 
-export const AudioSelection = () => {
+type AudioSelectionProps = HTMLAttributes<HTMLDivElement> & {}
+
+export const AudioSelection = ({...rest}: AudioSelectionProps) => {
   return (
-    <section className="border border-blue-500 w-1/6 h-screen">
-      <div className="border flex items-center">
+    <section {...rest}>
+      <div className="flex items-center">
         {Object.values(soundPaths).map((src, i) => (
           <AudioBase key={i} src={src} type={"selection"} index={i} />
         ))}
