@@ -1,27 +1,18 @@
 "use client";
 
-// import { useAuthContext } from "./providers/authProvider";
-
-import { auth } from "@/firebaseConfig";
-import { useEffect, useState } from "react";
+import useFireAuth from "@/lib/hooks/useFireAuth";
 
 export const SignIn = () => {
-  // const { user, login, logout } = useAuthContext();
 
-  const [t, setT] = useState(auth.currentUser)
+  const {isLoading, user, login, logout} = useFireAuth()
 
-  useEffect(()=>{
-    setT(auth.currentUser)
-  }, [])
+  // if(isLoading) return <div>HOOK LOADING....</div>
 
   return (
     <div>
-      {/* <button onClick={() => login()}>LOGIN</button>
-      <button onClick={() => logout()}>LOGOUT</button> */}
-      USER:
-      {auth.currentUser?.displayName}
-      <br />
-      <button onClick={()=> console.log("clicked")}>BTN</button>
+      <button onClick={() => login()}>LOGIN</button>
+      <button onClick={() => logout()}>LOGOUT</button>
+      USER: {user ? user.displayName : "No User"}
     </div>
   );
 };
