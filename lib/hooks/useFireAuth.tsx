@@ -3,6 +3,7 @@ import { auth } from "@/firebaseConfig";
 import {
   GoogleAuthProvider,
   User,
+  onAuthStateChanged,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
@@ -12,36 +13,25 @@ export default function useFireAuth() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    auth
-      .authStateReady()
-      .then(() => {
-        if (auth.currentUser) {
-          console.log("yes user");
-          setUser(auth.currentUser);
-        } else {
-          console.log("no user");
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const unsub = onAuthStateChanged(auth, (authUser) => {
+      console.log("[onauthstatechanged] ran");
+      if (authUser) {
+        console.log("[onauthstatechanged] yes user");
+        setUser(authUser);
+      } else {
+        console.log("[onauthstatechanged] no user");
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+    window.addEventListener("beforeunload", unsub);
 
     return () => {
       console.log("[cleanup] ran");
+      unsub();
+      window.removeEventListener("beforeunload", unsub);
     };
   }, []);
-
-  async function updateUser(){
-    await auth.authStateReady()
-    if(auth.currentUser){
-      console.log("[updateUser] yes user")
-      setUser(auth.currentUser)
-    }else{
-      console.log("[updateUser] no user")
-      setUser(null)
-    }
-  }
 
   async function login() {
     if (isLoading) {
@@ -81,6 +71,5 @@ export default function useFireAuth() {
     isLoading,
     login,
     logout,
-    updateUser,
   };
 }
