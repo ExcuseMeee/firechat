@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { auth } from "@/firebaseConfig";
 import {
-  GoogleAuthProvider,
+  AuthError,
   User,
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
-  signInWithPopup,
+  signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 
@@ -33,7 +34,7 @@ export default function useFireAuth() {
     };
   }, []);
 
-  async function login() {
+  async function login(email: string, password: string) {
     if (isLoading) {
       console.log("[login] auth not ready");
       return;
@@ -42,13 +43,14 @@ export default function useFireAuth() {
       console.log("[login] user already exists");
       return;
     }
-    const googleProvider = new GoogleAuthProvider();
+
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await signInWithEmailAndPassword(auth, email, password);
       console.log("[login] success", result.user);
       setUser(result.user);
     } catch (error) {
-      console.log("[login] error occured", error);
+      console.log("[login] error occured", (error as AuthError).message);
+      throw new Error("Invalid Credentials");
     }
   }
 
@@ -66,10 +68,35 @@ export default function useFireAuth() {
     }
   }
 
+  async function signUp(email: string, password: string, username: string) {
+    if (isLoading) {
+      console.log("[signup] auth not ready");
+      return;
+    }
+    if (user) {
+      console.log("[signup] user already exists");
+      return;
+    }
+
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("[signup] successful");
+      setUser(result.user);
+    } catch (error) {
+      console.log("[signup] error occured", (error as AuthError).message);
+      throw new Error("Sign Up Failed");
+    }
+  }
+
   return {
     user,
     isLoading,
     login,
     logout,
+    signUp,
   };
 }

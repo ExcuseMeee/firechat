@@ -13,10 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { AlertTriangle, LogIn, LogOut, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type ProfileProps = AvatarProps & {};
 
 export const Profile = ({ ...rest }: ProfileProps) => {
+  const router = useRouter();
+
   const { isLoading, user, login, logout } = useFireAuth();
 
   const imageUrl = user?.photoURL ?? "";
@@ -60,10 +63,10 @@ export const Profile = ({ ...rest }: ProfileProps) => {
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
-            onClick={() => login()}
+            onClick={() => router.push("/login")}
             className="flex justify-center items-center space-x-1 hover:cursor-pointer"
           >
-            <LogIn className="h-5"/>
+            <LogIn className="h-5" />
             <span>Sign In</span>
           </DropdownMenuItem>
         )}

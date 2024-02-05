@@ -19,34 +19,49 @@ import { useRouter } from "next/navigation";
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z.string().min(1, { message: "Invalid password" }),
+  username: z.string().min(1, {message: "Invalid username"})
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-export const SignIn = () => {
+export const SignUp = () => {
   const router = useRouter();
-  const { isLoading, login } = useFireAuth();
+  const { isLoading, signUp } = useFireAuth();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
+      username: "",
     },
   });
 
   async function onSubmit(values: FormData) {
     try {
-      await login(values.email, values.password);
+      await signUp(values.email, values.password, values.username);
       router.push("/chat");
     } catch (error) {
-      console.log("[onSubmit] login failed", error);
+      console.log("[onSubmit] signup failed", error);
     }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="Username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -73,7 +88,7 @@ export const SignIn = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Sign In</Button>
+        <Button type="submit">Sign Up</Button>
       </form>
     </Form>
   );

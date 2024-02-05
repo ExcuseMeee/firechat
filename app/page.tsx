@@ -1,4 +1,3 @@
-import { SignIn } from "@/components/SignIn";
 import Link from "next/link";
 
 export default function Home() {
