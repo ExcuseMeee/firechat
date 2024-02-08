@@ -14,13 +14,26 @@ import {
 } from "./ui/dropdown-menu";
 import { AlertTriangle, LogIn, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 type ProfileProps = AvatarProps & {};
 
 export const Profile = ({ ...rest }: ProfileProps) => {
   const router = useRouter();
 
-  const { isLoading, user, login, logout } = useFireAuth();
+  const { isLoading, user, logout, attachAuthListener } = useFireAuth();
+
+  useEffect(() => {
+    console.log("[profile effect] ran");
+    const unsub = attachAuthListener();
+    window.addEventListener("beforeunload", unsub);
+
+    return () => {
+      console.log("[profile cleanup] ran");
+      unsub();
+      window.removeEventListener("beforeunload", unsub);
+    };
+  }, []);
 
   const imageUrl = user?.photoURL ?? "";
 
