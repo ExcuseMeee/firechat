@@ -15,11 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useFireAuth from "@/lib/hooks/useFireAuth";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z.string().min(1, { message: "Invalid password" }),
-  username: z.string().min(1, {message: "Invalid username"})
+  username: z.string().min(1, { message: "Invalid username" }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -47,49 +48,55 @@ export const SignUp = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Email Address" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Password" type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Sign Up</Button>
-      </form>
-    </Form>
+    <Card>
+      <CardHeader><CardTitle>Sign Up</CardTitle></CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email Address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Password" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full mt-5">Sign Up</Button>
+          </form>
+        </Form>
+      </CardContent>
+      <CardFooter>Footer</CardFooter>
+    </Card>
   );
 };
