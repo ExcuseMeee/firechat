@@ -13,9 +13,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import useFireAuth from "@/lib/hooks/useFireAuth";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import useAuthActions from "@/lib/hooks/useAuthActions";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -27,7 +27,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export const SignUp = () => {
   const router = useRouter();
-  const { isLoading, signUp } = useFireAuth();
+  const {signUp, isLoading} = useAuthActions();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -92,7 +92,7 @@ export const SignUp = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full mt-5">Sign Up</Button>
+            <Button disabled={isLoading} type="submit" className="w-full mt-5">Sign Up</Button>
           </form>
         </Form>
       </CardContent>

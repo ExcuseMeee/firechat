@@ -2,7 +2,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import { cn } from "@/lib/utils";
-import useFireAuth from "@/lib/hooks/useFireAuth";
 import { Skeleton } from "./ui/skeleton";
 import {
   DropdownMenu,
@@ -14,26 +13,16 @@ import {
 } from "./ui/dropdown-menu";
 import { AlertTriangle, LogIn, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import useAuthListener from "@/lib/hooks/useAuthListener";
+import useAuthActions from "@/lib/hooks/useAuthActions";
 
 type ProfileProps = AvatarProps & {};
 
 export const Profile = ({ ...rest }: ProfileProps) => {
   const router = useRouter();
 
-  const { isLoading, user, logout, attachAuthListener } = useFireAuth();
-
-  useEffect(() => {
-    console.log("[profile effect] ran");
-    const unsub = attachAuthListener();
-    window.addEventListener("beforeunload", unsub);
-
-    return () => {
-      console.log("[profile cleanup] ran");
-      unsub();
-      window.removeEventListener("beforeunload", unsub);
-    };
-  }, []);
+  const { user, isLoading } = useAuthListener();
+  const { login, logout, isLoading: isActionLoading } = useAuthActions();
 
   const imageUrl = user?.photoURL ?? "";
 

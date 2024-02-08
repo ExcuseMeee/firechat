@@ -14,38 +14,22 @@ export default function useFireAuth() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // const unsub = onAuthStateChanged(auth, (authUser) => {
-    //   console.log("[onauthstatechanged] ran");
-    //   if (authUser) {
-    //     console.log("[onauthstatechanged] yes user");
-    //     setUser(authUser);
-    //   } else {
-    //     console.log("[onauthstatechanged] no user");
-    //     setUser(null);
-    //   }
-    //   setIsLoading(false);
-    // });
-    // window.addEventListener("beforeunload", unsub);
-    console.log("[auth effect] ran")
-    auth
-      .authStateReady()
-      .then(() => {
-        if (auth.currentUser) {
-          setUser(auth.currentUser);
-          console.log("[auth effect] yes user", auth.currentUser)
-        } else {
-          setUser(null);
-          console.log("[auth effect] no user", auth.currentUser)
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-
+    const unsub = onAuthStateChanged(auth, (authUser) => {
+      console.log("[onauthstatechanged] ran");
+      if (authUser) {
+        console.log("[onauthstatechanged] yes user");
+        setUser(authUser);
+      } else {
+        console.log("[onauthstatechanged] no user");
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+    window.addEventListener("beforeunload", unsub);
     return () => {
       console.log("[auth cleanup] ran");
-      // unsub();
-      // window.removeEventListener("beforeunload", unsub);
+      unsub();
+      window.removeEventListener("beforeunload", unsub);
     };
   }, []);
 
@@ -107,19 +91,19 @@ export default function useFireAuth() {
     }
   }
 
-  function attachAuthListener() {
-    return onAuthStateChanged(auth, (authUser) => {
-      console.log("[onauthstatechanged] ran");
-      if (authUser) {
-        console.log("[onauthstatechanged] yes user");
-        setUser(authUser);
-      } else {
-        console.log("[onauthstatechanged] no user");
-        setUser(null);
-      }
-      setIsLoading(false);
-    });
-  }
+  // function attachAuthListener() {
+  //   return onAuthStateChanged(auth, (authUser) => {
+  //     console.log("[onauthstatechanged] ran");
+  //     if (authUser) {
+  //       console.log("[onauthstatechanged] yes user");
+  //       setUser(authUser);
+  //     } else {
+  //       console.log("[onauthstatechanged] no user");
+  //       setUser(null);
+  //     }
+  //     setIsLoading(false);
+  //   });
+  // }
 
   return {
     user,
@@ -127,6 +111,5 @@ export default function useFireAuth() {
     login,
     logout,
     signUp,
-    attachAuthListener,
   };
 }
