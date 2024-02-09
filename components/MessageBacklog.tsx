@@ -3,7 +3,7 @@
 import { Message } from "@/components/Message"
 import { useChatContext } from "@/components/providers/chatProvider"
 
-export const Backlog = () => {
+export const MessageBacklog = () => {
   
   const {backlog, isBacklogLoading, getNextBatch} = useChatContext()
 
@@ -12,7 +12,7 @@ export const Backlog = () => {
   return (
     <div>
       <button onClick={getNextBatch}>Load More</button>
-      {backlog.toReversed().map((message, i)=> (
+      {backlog.map((message, i)=> (
         <Message key={i} message={message} />
       ))}
     </div>

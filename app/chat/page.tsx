@@ -1,14 +1,11 @@
-import { Backlog } from "@/components/Backlog";
-import { LiveFeed } from "@/components/LiveFeed";
 import { InputBox } from "@/components/InputBox";
 import Link from "next/link";
-import { SignIn } from "@/components/SignIn";
+import { ChatFeed } from "@/components/ChatFeed";
 
 export default function Chat() {
   return (
     <section className="border border-red-500 w-full h-full">
-      <Backlog />
-      <LiveFeed />
+      <ChatFeed />
       <InputBox />
       <Link href={"/"}>BACk</Link>
     </section>

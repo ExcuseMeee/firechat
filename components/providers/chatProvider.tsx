@@ -37,13 +37,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     DocumentData
   > | null>(null);
 
-  const [backlog, setBacklog] = useState<Msg[]>([]);
+  const [backlog, setBacklog] = useState<Msg[]>([]); // [oldest, ..., newest]
   const [isBacklogLoading, setIsBacklogLoading] = useState(true);
 
-  const [feed, setFeed] = useState<Msg[]>([]);
+  const [feed, setFeed] = useState<Msg[]>([]); // [oldest, ... , newest]
   const [isFeedLoading, setIsFeedLoading] = useState(true);
 
   async function getInitialBatch() {
+    // (first)newest -> ... -> (last)oldest
     const q = query(messagesCollection, orderBy("timestamp", "desc"), limit(5));
     const snapshot = await getDocs(q);
 
@@ -54,8 +55,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setLastVisible(lastVisibleDoc);
     setFirstVisible(firstVisibleDoc);
 
-    const initialBatch = snapshot.docs.map((docSnap) => docSnap.data());
-    setBacklog(initialBatch);
+    const initialBatch = snapshot.docs.map((docSnap) => docSnap.data()); // [newest, ... , oldest ]
+    setBacklog(initialBatch.toReversed()); // [oldest, ... , newest]
   }
 
   async function getNextBatch() {
@@ -72,12 +73,15 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
     setLastVisible(lastVisibleDoc);
 
-    const nextBatch = snapshot.docs.map((docSnap) => docSnap.data());
-    setBacklog((prevBatch) => [...prevBatch, ...nextBatch]);
+    // nextBatch contains older messages
+    const nextBatch = snapshot.docs.map((docSnap) => docSnap.data()); // [newest, ..., oldest]
+
+    // [(next)oldest, ... , (next)newest] + [(cur)oldest, ... , (cur)newest ]
+    setBacklog((curBacklog) => [...nextBatch.toReversed(), ...curBacklog]);
   }
 
   function attachChatListener() {
-    console.log("[Listener] adding listener...");
+    // console.log("[Listener] adding listener...");
 
     const q = query(
       messagesCollection,
@@ -90,7 +94,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       snapshot.forEach((docSnap) => {
         messages.push(docSnap.data());
       });
-      console.log("[Listener] feed...", messages);
+      // console.log("[Listener] feed...", messages);
       setFeed(messages);
     });
   }

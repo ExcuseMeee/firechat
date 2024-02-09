@@ -2,7 +2,11 @@
 import { Message } from "@/components/Message"
 import { useChatContext } from "@/components/providers/chatProvider"
 
-export const LiveFeed = () => {
+type LiveMessagesProps = {
+  
+}
+
+export const LiveMessages = () => {
   
   const {feed, isFeedLoading} = useChatContext()
 
