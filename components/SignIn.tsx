@@ -14,14 +14,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import useAuthActions from "@/lib/hooks/useAuthActions";
+import { Loader2, LogIn } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -47,7 +42,7 @@ export const SignIn = () => {
       await login(values.email, values.password);
       router.push("/chat");
     } catch (error) {
-      console.log("[onSubmit] login failed", error);
+      console.log("[onSubmit] failed", error);
     }
   }
 
@@ -55,6 +50,9 @@ export const SignIn = () => {
     <Card>
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
+        <CardDescription>
+          Login to a preexisting account to resume chatting
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -85,13 +83,17 @@ export const SignIn = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={isLoading} type="submit" className="w-full mt-5">
-              Sign In
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="w-full mt-5 flex justify-center space-x-1"
+            >
+              {isLoading ? <Loader2 className="animate-spin" /> : <LogIn />}
+              <span>Login</span>
             </Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter>Footer</CardFooter>
     </Card>
   );
 };

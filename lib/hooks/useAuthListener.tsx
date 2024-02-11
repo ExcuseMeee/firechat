@@ -7,14 +7,12 @@ export default function useAuthListener() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("[useAuthListener] ran");
-
     const unsub = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
-        console.log("[useAuthListener > onauthchanged] yes user", authUser);
+        console.log("[useAuthListener] yes user");
         setUser(authUser);
       } else {
-        console.log("[useAuthListener > onauthchanged] no user");
+        console.log("[useAuthListener] no user");
         setUser(null);
       }
       setIsLoading(false);

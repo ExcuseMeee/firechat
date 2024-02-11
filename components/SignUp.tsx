@@ -14,8 +14,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import useAuthActions from "@/lib/hooks/useAuthActions";
+import { KeyRound, Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -27,7 +28,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export const SignUp = () => {
   const router = useRouter();
-  const {signUp, isLoading} = useAuthActions();
+  const { signUp, isLoading } = useAuthActions();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -49,7 +50,12 @@ export const SignUp = () => {
 
   return (
     <Card>
-      <CardHeader><CardTitle>Sign Up</CardTitle></CardHeader>
+      <CardHeader>
+        <CardTitle>Sign Up</CardTitle>
+        <CardDescription>
+          Create an account to start chatting
+        </CardDescription>
+      </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -92,11 +98,17 @@ export const SignUp = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={isLoading} type="submit" className="w-full mt-5">Sign Up</Button>
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="w-full mt-5 flex justify-center space-x-1"
+            >
+              {isLoading ? <Loader2 className="animate-spin" /> : <KeyRound />}
+              <span>Create Account</span>
+            </Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter>Footer</CardFooter>
     </Card>
   );
 };
