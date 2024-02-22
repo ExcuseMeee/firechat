@@ -1,14 +1,11 @@
 "use client";
 
-import { InputProvider } from "@/components/providers/inputProvider";
-import { SoundProvider } from "@/components/providers/soundProvider";
+import { Menu } from "@/components/Menu";
 
 export default function Test() {
   return (
-    <SoundProvider>
-      <InputProvider>
-        <div>TEST</div>
-      </InputProvider>
-    </SoundProvider>
+    <div>
+      <Menu />
+    </div>
   );
 }

@@ -22,7 +22,7 @@ export const Profile = ({ ...rest }: ProfileProps) => {
   const router = useRouter();
 
   const { user, isLoading } = useAuthListener();
-  const { login, logout, isLoading: isActionLoading } = useAuthActions();
+  const { logout, isLoading: isActionLoading } = useAuthActions();
 
   const imageUrl = user?.photoURL ?? "";
 
