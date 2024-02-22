@@ -1,6 +1,6 @@
-import { InputBox } from "@/components/InputBox";
+import { InputBox } from "@/components/input/InputBox";
 import Link from "next/link";
-import { ChatFeed } from "@/components/ChatFeed";
+import { ChatFeed } from "@/components/chat/ChatFeed";
 
 export default function Chat() {
   return (

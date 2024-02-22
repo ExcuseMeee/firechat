@@ -1,8 +1,8 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import { cn } from "@/lib/utils";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { AlertTriangle, LogIn, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useAuthListener from "@/lib/hooks/useAuthListener";

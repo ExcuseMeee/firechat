@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { HTMLAttributes } from "react"
-import { Profile } from "./Profile"
+import { Profile } from "../auth/Profile"
 
 type HeaderProps = HTMLAttributes<HTMLDivElement> & {}
 

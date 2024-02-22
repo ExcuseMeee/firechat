@@ -1,6 +1,6 @@
-import { GuestSignIn } from "@/components/GuestSignIn";
-import { SignIn } from "@/components/SignIn";
-import { SignUp } from "@/components/SignUp";
+import { GuestSignIn } from "@/components/auth/GuestSignIn";
+import { SignIn } from "@/components/auth/SignIn";
+import { SignUp } from "@/components/auth/SignUp";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Login() {

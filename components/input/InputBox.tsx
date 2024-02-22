@@ -5,33 +5,35 @@ import { Button } from "@/components/ui/button";
 import { Msg } from "@/types";
 import { addDoc } from "firebase/firestore";
 import { useSoundContext } from "@/components/providers/soundProvider";
-import { AudioBase } from "@/components/AudioBase";
+import { AudioIcon } from "@/components/common/AudioIcon";
+import { useInputContext } from "@/components/providers/inputProvider";
 
 export const InputBox = () => {
-  const { inputSequence, setInputSequence, playSoundSequence } =
-    useSoundContext();
+  const { playSoundSequence } = useSoundContext();
+
+  const { input, clearInput } = useInputContext();
 
   async function sendMessage() {
-    if (inputSequence.length === 0) return;
+    if (input.length === 0) return;
     const messageCollection = typedCollectionRef<Msg>("test");
     await addDoc(messageCollection, {
       senderId: "TESTING",
-      payload: inputSequence,
+      payload: input,
       timestamp: new Date().getTime(),
     });
-    setInputSequence([]);
+    clearInput();
   }
 
   return (
     <div className="border border-green-500">
       <div className="flex items-center">
-        {inputSequence.map((src, i) => (
-          <AudioBase key={i} src={src} type={"input"} index={i} />
+        {input.map((src, i) => (
+          <AudioIcon key={i} src={src} type={"input"} index={i} />
         ))}
       </div>
       <Button onClick={sendMessage}>Post</Button>
-      <Button onClick={() => playSoundSequence(inputSequence)}>Preview</Button>
-      <Button onClick={() => setInputSequence([])}>Clear</Button>
+      <Button onClick={() => playSoundSequence(input)}>Preview</Button>
+      <Button onClick={() => clearInput()}>Clear</Button>
     </div>
   );
 };

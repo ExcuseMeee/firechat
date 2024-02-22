@@ -1,10 +1,10 @@
 "use client";
 
-import { MessageBacklog } from "./MessageBacklog";
-import { LiveMessages } from "./LiveMessages";
+import { MessageBacklog } from "@/components/chat/MessageBacklog";
+import { LiveMessages } from "@/components/chat/LiveMessages";
 import { useEffect, useRef } from "react";
-import { useChatContext } from "./providers/chatProvider";
-import { ScrollArea } from "./ui/scroll-area";
+import { useChatContext } from "@/components/providers/chatProvider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const ChatFeed = () => {
   const ref = useRef<HTMLDivElement>(null);

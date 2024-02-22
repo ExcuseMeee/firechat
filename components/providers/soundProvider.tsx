@@ -15,12 +15,9 @@ import {
 } from "react";
 
 type SoundContextType = {
-  audioCtxRef: MutableRefObject<AudioContext | null>;
   getSound: (src: string) => Promise<AudioBuffer | null>;
   playSound: (src: string) => Promise<void>;
   playSoundSequence: (sequence: string[]) => Promise<void>;
-  inputSequence: string[];
-  setInputSequence: Dispatch<SetStateAction<string[]>>;
 };
 
 const SoundContext = createContext<SoundContextType | null>(null);
@@ -29,8 +26,6 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const savedBuffers = useRef(new Map<string, AudioBuffer>());
-
-  const [inputSequence, setInputSequence] = useState<string[]>([]);
 
   useEffect(() => {
     const ctx = new AudioContext();
@@ -161,12 +156,9 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   return (
     <SoundContext.Provider
       value={{
-        audioCtxRef,
         getSound,
         playSound,
         playSoundSequence,
-        inputSequence,
-        setInputSequence,
       }}
     >
       {children}

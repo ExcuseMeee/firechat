@@ -1,7 +1,14 @@
-import { TestComp } from "@/components/TestComp";
+"use client";
+
+import { InputProvider } from "@/components/providers/inputProvider";
+import { SoundProvider } from "@/components/providers/soundProvider";
 
 export default function Test() {
   return (
-    <TestComp />
-  )
+    <SoundProvider>
+      <InputProvider>
+        <div>TEST</div>
+      </InputProvider>
+    </SoundProvider>
+  );
 }
