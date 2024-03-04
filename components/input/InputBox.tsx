@@ -7,9 +7,11 @@ import { addDoc } from "firebase/firestore";
 import { useSoundContext } from "@/components/providers/soundProvider";
 import { AudioIcon } from "@/components/common/AudioIcon";
 import { useInputContext } from "@/components/providers/inputProvider";
+import useSound from "@/lib/hooks/useSound";
 
 export const InputBox = () => {
-  const { playSoundSequence } = useSoundContext();
+  const { audioCtxRef, savedBuffers } = useSoundContext();
+  const { playSounds } = useSound(audioCtxRef.current, savedBuffers.current);
 
   const { input, clearInput } = useInputContext();
 
@@ -32,7 +34,7 @@ export const InputBox = () => {
         ))}
       </div>
       <Button onClick={sendMessage}>Post</Button>
-      <Button onClick={() => playSoundSequence(input)}>Preview</Button>
+      <Button onClick={() => playSounds(input)}>Preview</Button>
       <Button onClick={() => clearInput()}>Clear</Button>
     </div>
   );

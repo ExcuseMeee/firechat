@@ -3,7 +3,7 @@
 import { Msg } from "@/types";
 import { useSoundContext } from "@/components/providers/soundProvider";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Loader2, Play } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -12,13 +12,16 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AudioIcon } from "@/components/common/AudioIcon";
+import useSound from "@/lib/hooks/useSound";
 
 type MessageProps = {
   message: Msg;
 };
 
 export const Message = ({ message }: MessageProps) => {
-  const { playSoundSequence } = useSoundContext();
+  // const { playSoundSequence } = useSoundContext();
+  const { audioCtxRef, savedBuffers } = useSoundContext();
+  const { playSounds, isBuffering } = useSound(audioCtxRef.current, savedBuffers.current);
 
   return (
     <Card className="w-fit">
@@ -29,9 +32,10 @@ export const Message = ({ message }: MessageProps) => {
         <Button
           variant={"ghost"}
           size={"icon"}
-          onClick={() => playSoundSequence(message.payload)}
+          // onClick={() => playSoundSequence(message.payload)}
+          onClick={() => playSounds(message.payload)}
         >
-          <Play />
+          {isBuffering ? <Loader2 className="animate-spin" /> : <Play />}
         </Button>
         <Separator orientation={"vertical"} className="h-10" />
         <div className="flex">

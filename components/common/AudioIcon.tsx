@@ -13,6 +13,7 @@ import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { getFileName } from "@/lib/sounds";
 import { useSoundContext } from "@/components/providers/soundProvider";
 import { useInputContext } from "@/components/providers/inputProvider";
+import useSound from "@/lib/hooks/useSound";
 
 type AudioIconProps = {
   src: string;
@@ -21,14 +22,15 @@ type AudioIconProps = {
 };
 
 export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
-  const { playSound } = useSoundContext();
+  const { audioCtxRef, savedBuffers } = useSoundContext();
   const { addSoundToInput, removeSoundFromInput } = useInputContext();
+  const { playSounds } = useSound(audioCtxRef.current, savedBuffers.current);
 
   const audioName = getFileName(src);
 
   function handleClick() {
     if (type === "selection") {
-      playSound(src);
+      playSounds([src]);
       addSoundToInput(src);
     } else if (type === "input") {
       removeSoundFromInput(index!);
@@ -57,7 +59,7 @@ export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
       <ContextMenuContent>
         <ContextMenuLabel>{audioName}</ContextMenuLabel>
         <ContextMenuSeparator />
-        <ContextMenuItem onClick={() => playSound(src)}>
+        <ContextMenuItem onClick={() => playSounds([src])}>
           Play Sound
         </ContextMenuItem>
         {type === "selection" ? (
