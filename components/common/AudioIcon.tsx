@@ -24,7 +24,7 @@ type AudioIconProps = {
 export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
   const { audioCtxRef, savedBuffers } = useSoundContext();
   const { addSoundToInput, removeSoundFromInput } = useInputContext();
-  const { playSounds } = useSound(audioCtxRef.current, savedBuffers.current);
+  const { playSounds } = useSound(audioCtxRef, savedBuffers);
 
   const audioName = getFileName(src);
 

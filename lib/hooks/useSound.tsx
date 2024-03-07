@@ -1,17 +1,18 @@
+"use client";
 import { storage } from "@/firebaseConfig";
 import { getDownloadURL, ref } from "firebase/storage";
-import { useState } from "react";
+import { MutableRefObject, useState } from "react";
 import { soundPaths } from "../sounds";
 
 export default function useSound(
-  audioContext: AudioContext | null,
-  savedBuffers: Map<string, AudioBuffer>
+  audioContextRef: MutableRefObject<AudioContext | null>,
+  savedBuffersRef: MutableRefObject<Map<string, AudioBuffer>>
 ) {
   const [isBuffering, setIsBuffering] = useState(false);
 
   async function playSounds(sources: string[]) {
     console.log("[playSounds] ran");
-    if (!audioContext) {
+    if (!audioContextRef.current) {
       console.log("[playSounds] no ctx, returning");
       return;
     }
@@ -26,8 +27,8 @@ export default function useSound(
     const fetchedMissing = await getMissingBuffers(sources);
     const bufferSequence = await Promise.all(
       sources.map(async (src) => {
-        const buffer = savedBuffers.has(src)
-          ? (savedBuffers.get(src) as AudioBuffer)
+        const buffer = savedBuffersRef.current.has(src)
+          ? (savedBuffersRef.current.get(src) as AudioBuffer)
           : fetchedMissing?.has(src)
           ? (fetchedMissing.get(src) as AudioBuffer)
           : await getSoundBuffer(src);
@@ -37,11 +38,11 @@ export default function useSound(
     setIsBuffering(false);
 
     // play first buffer immediately
-    const initialNode = audioContext.createBufferSource();
+    const initialNode = audioContextRef.current.createBufferSource();
     const initialBuffer = bufferSequence.at(0);
     if (initialBuffer) {
       initialNode.buffer = initialBuffer;
-      initialNode.connect(audioContext.destination);
+      initialNode.connect(audioContextRef.current.destination);
       initialNode.start();
     }
 
@@ -54,12 +55,12 @@ export default function useSound(
         return;
       }
 
-      const audioNode = audioContext.createBufferSource();
+      const audioNode = audioContextRef.current!.createBufferSource();
       const audioBuffer = bufferSequence.at(currentIndex);
       if (audioBuffer) {
         // play sound if it exists
         audioNode.buffer = audioBuffer;
-        audioNode.connect(audioContext.destination);
+        audioNode.connect(audioContextRef.current!.destination);
         audioNode.start();
       }
 
@@ -69,7 +70,7 @@ export default function useSound(
 
   async function getSoundBuffer(src: string) {
     console.log("[getSoundBuffer] called");
-    if (!audioContext) {
+    if (!audioContextRef.current) {
       console.log("[getSoundBuffer] no audioctx available");
       return null;
     }
@@ -77,8 +78,8 @@ export default function useSound(
       const soundRef = ref(storage, src);
       const soundUrl = await getDownloadURL(soundRef);
       const buffer = await fetch(soundUrl).then((res) => res.arrayBuffer());
-      const decoded = await audioContext.decodeAudioData(buffer);
-      savedBuffers.set(src, decoded);
+      const decoded = await audioContextRef.current.decodeAudioData(buffer);
+      savedBuffersRef.current.set(src, decoded);
       return decoded;
     } catch (error) {
       console.log("[getSoundBuffer] ", error);
@@ -87,7 +88,9 @@ export default function useSound(
   }
 
   async function getMissingBuffers(sources: string[]) {
-    const missingBuffers = sources.filter((src) => !savedBuffers.has(src));
+    const missingBuffers = sources.filter(
+      (src) => !savedBuffersRef.current.has(src)
+    );
     if (missingBuffers.length === 0) return null;
 
     const uniqueMissingBuffers = Array.from(new Set(missingBuffers));

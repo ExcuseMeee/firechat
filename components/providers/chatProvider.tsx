@@ -45,7 +45,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   async function getInitialBatch() {
     // (first)newest -> ... -> (last)oldest
-    const q = query(messagesCollection, orderBy("timestamp", "desc"), limit(2));
+    const q = query(messagesCollection, orderBy("timestamp", "desc"), limit(5));
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) return;

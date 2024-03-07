@@ -21,7 +21,7 @@ type MessageProps = {
 export const Message = ({ message }: MessageProps) => {
   // const { playSoundSequence } = useSoundContext();
   const { audioCtxRef, savedBuffers } = useSoundContext();
-  const { playSounds, isBuffering } = useSound(audioCtxRef.current, savedBuffers.current);
+  const { playSounds, isBuffering } = useSound(audioCtxRef, savedBuffers);
 
   return (
     <Card className="w-fit">
