@@ -34,7 +34,6 @@ export const Message = ({ message }: MessageProps) => {
         <Button
           variant={"ghost"}
           size={"icon"}
-          // onClick={() => playSoundSequence(message.payload)}
           onClick={() => {
             if (isBuffering) return;
             else if (isPlaying) stopSounds(); 

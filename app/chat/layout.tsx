@@ -16,7 +16,7 @@ export default function ChatLayout({
           <div className="flex flex-col h-screen">
             <Header className="min-h-[8%] border border-yellow-500" />
             <main className="flex h-full">
-              <AudioSelection className="border border-blue-500 min-w-[15%]" />
+              <AudioSelection className="border border-blue-500" />
               {children}
             </main>
           </div>
