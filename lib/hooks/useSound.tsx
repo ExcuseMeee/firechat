@@ -9,6 +9,12 @@ export default function useSound(
   savedBuffersRef: MutableRefObject<Map<string, AudioBuffer>>
 ) {
   const [isBuffering, setIsBuffering] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const [audioInterval, setAudioInterval] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  const [playedNodes, setPlayedNodes] = useState<AudioBufferSourceNode[]>([]);
 
   async function playSounds(sources: string[]) {
     console.log("[playSounds] ran");
@@ -38,11 +44,13 @@ export default function useSound(
     setIsBuffering(false);
 
     // play first buffer immediately
+    setIsPlaying(true);
     const initialNode = audioContextRef.current.createBufferSource();
     const initialBuffer = bufferSequence.at(0);
     if (initialBuffer) {
       initialNode.buffer = initialBuffer;
       initialNode.connect(audioContextRef.current.destination);
+      setPlayedNodes((played) => [...played, initialNode]);
       initialNode.start();
     }
 
@@ -52,6 +60,9 @@ export default function useSound(
       if (currentIndex > bufferSequence.length - 1) {
         // end of sequence
         clearInterval(interval);
+        setAudioInterval(null);
+        setPlayedNodes([]);
+        setIsPlaying(false);
         return;
       }
 
@@ -61,11 +72,13 @@ export default function useSound(
         // play sound if it exists
         audioNode.buffer = audioBuffer;
         audioNode.connect(audioContextRef.current!.destination);
+        setPlayedNodes((played) => [...played, audioNode]);
         audioNode.start();
       }
 
       currentIndex++;
     }, 500);
+    setAudioInterval(interval);
   }
 
   async function getSoundBuffer(src: string) {
@@ -110,8 +123,27 @@ export default function useSound(
     return fetchedMissingMap;
   }
 
+  async function stopSounds() {
+    console.log("[stopSounds] called");
+    if (!audioContextRef.current) {
+      console.log("[stopSounds] no audio ctx");
+      return;
+    }
+    if (!audioInterval) {
+      console.log("[stopSounds] no interval");
+      return;
+    }
+    clearInterval(audioInterval);
+    setAudioInterval(null);
+    playedNodes.forEach((audioNode) => audioNode.stop());
+    setPlayedNodes([]);
+    setIsPlaying(false);
+  }
+
   return {
     isBuffering,
     playSounds,
+    isPlaying,
+    stopSounds,
   };
 }

@@ -11,7 +11,7 @@ import useSound from "@/lib/hooks/useSound";
 
 export const InputBox = () => {
   const { audioCtxRef, savedBuffers } = useSoundContext();
-  const { playSounds } = useSound(audioCtxRef.current, savedBuffers.current);
+  const { playSounds } = useSound(audioCtxRef, savedBuffers);
 
   const { input, clearInput } = useInputContext();
 
