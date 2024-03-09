@@ -6,26 +6,15 @@ import { useState } from "react";
 
 type ImageWithFallbackProps = ImageProps & {};
 
-export const ImageWithFallback = ({
-  src,
-  height,
-  width,
-  ...rest
-}: ImageWithFallbackProps) => {
+export const ImageWithFallback = ({ src, ...rest }: ImageWithFallbackProps) => {
   const [isError, setIsError] = useState(false);
 
   return (
     <>
       {isError ? (
-        <AudioLines height={height} width={width} />
+        <AudioLines className="w-2/3 h-2/3" />
       ) : (
-        <Image
-          {...rest}
-          src={src}
-          height={height}
-          width={width}
-          onError={() => setIsError(true)}
-        />
+        <Image {...rest} src={src} onError={() => setIsError(true)} />
       )}
     </>
   );

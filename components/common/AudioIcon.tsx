@@ -45,14 +45,13 @@ export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
         <Button
           onClick={handleClick}
           variant={"ghost"}
-          size={"icon"}
-          className="flex items-center justify-center"
+          className="flex items-center justify-center relative p-0 w-8 h-8 sm:w-14 sm:h-14"
         >
           <ImageWithFallback
             src={`/icons/${audioName}.png`}
             alt={audioName}
-            height={35}
-            width={35}
+            fill
+            className="p-1 m-0"
           />
         </Button>
       </ContextMenuTrigger>

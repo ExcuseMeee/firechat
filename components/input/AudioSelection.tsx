@@ -7,28 +7,22 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
-type AudioSelectionProps = HTMLAttributes<HTMLDivElement> & {};
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export const AudioSelection = ({ ...rest }: AudioSelectionProps) => {
+export const AudioSelection = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <Collapsible
-      {...rest}
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className={cn("flex h-full", rest.className)}
-    >
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex h-full border-r">
       <CollapsibleContent>
-        <div className="flex items-center border w-52 max-w-52 flex-wrap justify-center">
+        <div className="flex flex-wrap justify-evenly w-28 max-w-28 md:w-64 md:max-w-64 ">
           {Object.values(soundPaths).map((src, i) => (
             <AudioIcon key={i} src={src} type={"selection"} index={i} />
           ))}
         </div>
       </CollapsibleContent>
-      <CollapsibleTrigger className="border border-green-500">
-        O
+      <CollapsibleTrigger className="hover:bg-accent">
+        {isOpen ? <ChevronLeft /> : <ChevronRight />}
       </CollapsibleTrigger>
     </Collapsible>
   );

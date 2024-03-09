@@ -7,8 +7,8 @@ type HeaderProps = HTMLAttributes<HTMLDivElement> & {}
 export const Header = ({...rest}: HeaderProps) => {
   return (
     <header {...rest} className={cn("flex justify-between items-center w-screen", rest.className)}>
-      <div className={"border border-blue-500 mx-10 "}>Firechat</div>
-      <Profile className="mx-10 hover:cursor-pointer" />
+      <div className={"border border-blue-500"}>Firechat</div>
+      <Profile className="hover:cursor-pointer m-0" />
     </header>
   )
 }

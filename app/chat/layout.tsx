@@ -13,10 +13,10 @@ export default function ChatLayout({
     <ChatProvider>
       <SoundProvider>
         <InputProvider>
-          <div className="flex flex-col h-screen">
-            <Header className="min-h-[8%] border border-yellow-500" />
-            <main className="flex h-full">
-              <AudioSelection className="border border-blue-500" />
+          <div className="flex h-screen">
+            <AudioSelection />
+            <main className="flex-grow flex flex-col px-10">
+              <Header className="w-full border" />
               {children}
             </main>
           </div>

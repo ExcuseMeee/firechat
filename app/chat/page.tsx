@@ -4,7 +4,7 @@ import { ChatFeed } from "@/components/chat/ChatFeed";
 
 export default function Chat() {
   return (
-    <section className="border border-red-500 w-full h-full">
+    <section className="w-full h-full">
       <ChatFeed />
       <InputBox />
       <Link href={"/"}>BACk</Link>

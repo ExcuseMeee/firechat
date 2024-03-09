@@ -26,9 +26,9 @@ export const Message = ({ message }: MessageProps) => {
   );
 
   return (
-    <Card className="w-fit">
+    <Card className="w-full border-2 border-white">
       <CardHeader className="py-0">
-        <CardDescription>Sender</CardDescription>
+        <CardDescription>SenderDWDOWAKDOWKDOAKDWDOKWAd</CardDescription>
       </CardHeader>
       <CardContent className="py-1 flex items-center space-x-3">
         <Button
@@ -36,7 +36,7 @@ export const Message = ({ message }: MessageProps) => {
           size={"icon"}
           onClick={() => {
             if (isBuffering) return;
-            else if (isPlaying) stopSounds(); 
+            else if (isPlaying) stopSounds();
             else playSounds(message.payload);
           }}
         >
@@ -49,7 +49,7 @@ export const Message = ({ message }: MessageProps) => {
           )}
         </Button>
         <Separator orientation={"vertical"} className="h-10" />
-        <div className="flex">
+        <div className="flex flex-wrap">
           {message.payload.map((src, i) => (
             <AudioIcon key={i} src={src} type={"message"} />
           ))}
