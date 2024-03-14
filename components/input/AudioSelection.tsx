@@ -17,7 +17,7 @@ export const AudioSelection = () => {
       <CollapsibleContent>
         <div className="flex flex-wrap justify-evenly w-28 max-w-28 md:w-64 md:max-w-64 ">
           {Object.values(soundPaths).map((src, i) => (
-            <AudioIcon key={i} src={src} type={"selection"} index={i} />
+            <AudioIcon key={i} src={src} iconType={"selection"} index={i} className="w-8 h-8 sm:w-14 sm:h-14" />
           ))}
         </div>
       </CollapsibleContent>

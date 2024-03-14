@@ -1,60 +1,32 @@
 "use client";
 
 import { Msg } from "@/types";
-import { useSoundContext } from "@/components/providers/soundProvider";
-import { Button } from "@/components/ui/button";
-import { Loader2, Play, StopCircle } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { AudioIcon } from "@/components/common/AudioIcon";
-import useSound from "@/lib/hooks/useSound";
+import { UserIcon } from "../common/UserIcon";
+import { PlayAudio } from "../common/PlayAudio";
 
 type MessageProps = {
   message: Msg;
 };
 
 export const Message = ({ message }: MessageProps) => {
-  const { audioCtxRef, savedBuffers } = useSoundContext();
-  const { playSounds, isBuffering, isPlaying, stopSounds } = useSound(
-    audioCtxRef,
-    savedBuffers
-  );
-
   return (
-    <Card className="w-full border-2 border-white">
-      <CardHeader className="py-0">
-        <CardDescription>SenderDWDOWAKDOWKDOAKDWDOKWAd</CardDescription>
-      </CardHeader>
-      <CardContent className="py-1 flex items-center space-x-3">
-        <Button
-          variant={"ghost"}
-          size={"icon"}
-          onClick={() => {
-            if (isBuffering) return;
-            else if (isPlaying) stopSounds();
-            else playSounds(message.payload);
-          }}
-        >
-          {isBuffering ? (
-            <Loader2 className="animate-spin" />
-          ) : isPlaying ? (
-            <StopCircle />
-          ) : (
-            <Play />
-          )}
-        </Button>
-        <Separator orientation={"vertical"} className="h-10" />
-        <div className="flex flex-wrap">
+    <div className="flex space-x-2 items-center my-2">
+      <UserIcon imageUrl="" className="w-12 h-12" />
+      <div className="flex flex-col flex-grow">
+        <div className="h-fit">{message.senderId}</div>
+        <div className="flex flex-wrap items-center">
+          <PlayAudio sounds={message.payload} />
           {message.payload.map((src, i) => (
-            <AudioIcon key={i} src={src} type={"message"} />
+            <AudioIcon
+              key={i}
+              src={src}
+              iconType={"message"}
+              className="w-10 h-10"
+            />
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

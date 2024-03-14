@@ -11,7 +11,6 @@ export const LiveMessages = () => {
 
   return (
     <div>
-      LIVE FEED....
       {feed.map((message, i) => (
         <Message key={i} message={message} />
       ))}

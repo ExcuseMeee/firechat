@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -14,14 +14,20 @@ import { getFileName } from "@/lib/sounds";
 import { useSoundContext } from "@/components/providers/soundProvider";
 import { useInputContext } from "@/components/providers/inputProvider";
 import useSound from "@/lib/hooks/useSound";
+import { cn } from "@/lib/utils";
 
 type AudioIconProps = {
   src: string;
-  type: "selection" | "input" | "message";
+  iconType: "selection" | "input" | "message";
   index?: number;
-};
+} & ButtonProps;
 
-export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
+export const AudioIcon = ({
+  src,
+  iconType,
+  index,
+  ...rest
+}: AudioIconProps) => {
   const { audioCtxRef, savedBuffers } = useSoundContext();
   const { addSoundToInput, removeSoundFromInput } = useInputContext();
   const { playSounds } = useSound(audioCtxRef, savedBuffers);
@@ -29,10 +35,10 @@ export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
   const audioName = getFileName(src);
 
   function handleClick() {
-    if (type === "selection") {
+    if (iconType === "selection") {
       playSounds([src]);
       addSoundToInput(src);
-    } else if (type === "input") {
+    } else if (iconType === "input") {
       removeSoundFromInput(index!);
     } else {
       return;
@@ -45,7 +51,10 @@ export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
         <Button
           onClick={handleClick}
           variant={"ghost"}
-          className="flex items-center justify-center relative p-0 w-8 h-8 sm:w-14 sm:h-14"
+          className={cn(
+            "flex items-center justify-center relative p-0 w-10 h-10",
+            rest.className
+          )}
         >
           <ImageWithFallback
             src={`/icons/${audioName}.png`}
@@ -61,15 +70,15 @@ export const AudioIcon = ({ src, type, index }: AudioIconProps) => {
         <ContextMenuItem onClick={() => playSounds([src])}>
           Play Sound
         </ContextMenuItem>
-        {type === "selection" ? (
+        {iconType === "selection" ? (
           <ContextMenuItem onClick={() => addSoundToInput(src)}>
             Add Sound
           </ContextMenuItem>
-        ) : type === "input" ? (
+        ) : iconType === "input" ? (
           <ContextMenuItem onClick={() => removeSoundFromInput(index!)}>
             Remove Sound
           </ContextMenuItem>
-        ) : type === "message" ? (
+        ) : iconType === "message" ? (
           <ContextMenuItem>Placeholder</ContextMenuItem>
         ) : null}
       </ContextMenuContent>

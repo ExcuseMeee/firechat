@@ -1,5 +1,4 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,11 +9,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { AlertTriangle, LogIn, LogOut, User } from "lucide-react";
+} from "@/components/ui/dropdown-menu";
+import { AlertTriangle, LogIn, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useAuthListener from "@/lib/hooks/useAuthListener";
 import useAuthActions from "@/lib/hooks/useAuthActions";
+import { UserIcon } from "@/components/common/UserIcon";
 
 type ProfileProps = AvatarProps & {};
 
@@ -28,20 +28,13 @@ export const Profile = ({ ...rest }: ProfileProps) => {
 
   if (isLoading)
     return (
-      <Skeleton
-        className={cn("mx-10 h-10 w-10 rounded-full", rest.className)}
-      />
+      <Skeleton className={cn("h-10 w-10 rounded-full", rest.className)} />
     );
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar {...rest} className={cn("mx-10 h-10 w-10", rest.className)}>
-          <AvatarImage src={imageUrl} alt={"dwwd"} />
-          <AvatarFallback>
-            <User />
-          </AvatarFallback>
-        </Avatar>
+      <DropdownMenuTrigger className="outline-none">
+        <UserIcon {...rest} imageUrl={imageUrl} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="flex justify-center">

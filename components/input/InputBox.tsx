@@ -30,7 +30,7 @@ export const InputBox = () => {
     <div className="border border-green-500">
       <div className="flex items-center">
         {input.map((src, i) => (
-          <AudioIcon key={i} src={src} type={"input"} index={i} />
+          <AudioIcon key={i} src={src} iconType={"input"} index={i} className="w-14 h-14" />
         ))}
       </div>
       <Button onClick={sendMessage}>Post</Button>

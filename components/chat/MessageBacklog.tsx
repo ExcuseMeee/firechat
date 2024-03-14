@@ -9,7 +9,7 @@ export const MessageBacklog = () => {
   if (isBacklogLoading) return <div>BACKLOG LOADING...</div>;
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col">
       <button onClick={getNextBatch}>Load More</button>
       {backlog.map((message, i) => (
         <Message key={i} message={message} />
