@@ -13,9 +13,9 @@ export default function ChatLayout({
     <ChatProvider>
       <SoundProvider>
         <InputProvider>
-          <div className="flex h-screen">
+          <div className="flex h-screen max-w-screen border border-green-500">
             <AudioSelection />
-            <main className="flex-grow flex flex-col px-8">
+            <main className="flex-grow flex flex-col px-20">
               <Header className="w-full py-4" />
               {children}
             </main>

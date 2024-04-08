@@ -4,15 +4,13 @@ import { typedCollectionRef } from "@/lib/firebase-utils";
 import { Button } from "@/components/ui/button";
 import { Msg } from "@/types";
 import { addDoc } from "firebase/firestore";
-import { useSoundContext } from "@/components/providers/soundProvider";
 import { AudioIcon } from "@/components/common/AudioIcon";
 import { useInputContext } from "@/components/providers/inputProvider";
-import useSound from "@/lib/hooks/useSound";
+import { ScrollArea } from "../ui/scroll-area";
+import { PlayAudio } from "../common/PlayAudio";
+import { SendHorizonal, Trash2 } from "lucide-react";
 
 export const InputBox = () => {
-  const { audioCtxRef, savedBuffers } = useSoundContext();
-  const { playSounds } = useSound(audioCtxRef, savedBuffers);
-
   const { input, clearInput } = useInputContext();
 
   async function sendMessage() {
@@ -27,15 +25,29 @@ export const InputBox = () => {
   }
 
   return (
-    <div className="border border-green-500">
-      <div className="flex items-center">
-        {input.map((src, i) => (
-          <AudioIcon key={i} src={src} iconType={"input"} index={i} className="w-14 h-14" />
-        ))}
+    <div className="flex h-32 rounded-md my-4 mb-8 p-1 bg-lighter">
+      <div className="flex flex-col">
+        <Button variant={"ghost"} size={"icon"} onClick={sendMessage}>
+          <SendHorizonal />
+        </Button>
+        <PlayAudio sounds={input} />
+        <Button variant={"ghost"} size={"icon"} onClick={clearInput}>
+          <Trash2 />
+        </Button>
       </div>
-      <Button onClick={sendMessage}>Post</Button>
-      <Button onClick={() => playSounds(input)}>Preview</Button>
-      <Button onClick={() => clearInput()}>Clear</Button>
+      <ScrollArea className="h-full flex-grow">
+        <div className="flex items-center flex-wrap mx-2">
+          {input.map((src, i) => (
+            <AudioIcon
+              key={i}
+              src={src}
+              iconType={"input"}
+              index={i}
+              className="w-10 h-10"
+            />
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 };

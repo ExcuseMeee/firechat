@@ -1,6 +1,6 @@
 "use client";
 import { soundPaths } from "@/lib/sounds";
-import { HTMLAttributes, useState } from "react";
+import { useState } from "react";
 import { AudioIcon } from "@/components/common/AudioIcon";
 import {
   Collapsible,
@@ -13,7 +13,7 @@ export const AudioSelection = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex h-full border-r">
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex h-full bg-lighter">
       <CollapsibleContent>
         <div className="flex flex-wrap justify-evenly w-28 max-w-28 md:w-64 md:max-w-64 ">
           {Object.values(soundPaths).map((src, i) => (

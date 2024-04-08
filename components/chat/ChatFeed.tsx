@@ -4,7 +4,7 @@ import { MessageBacklog } from "@/components/chat/MessageBacklog";
 import { LiveMessages } from "@/components/chat/LiveMessages";
 import { useEffect, useRef } from "react";
 import { useChatContext } from "@/components/providers/chatProvider";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const ChatFeed = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,10 +22,11 @@ export const ChatFeed = () => {
   return (
     <ScrollArea
       ref={ref}
-      className="flex flex-col h-[500px] overflow-y-auto py-1"
+      className="h-[300px] overflow-y-auto flex-grow"
     >
       <MessageBacklog />
       <LiveMessages />
+      <ScrollBar orientation="vertical" />
     </ScrollArea>
   );
 };
