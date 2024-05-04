@@ -10,7 +10,7 @@ type UserIconProps = AvatarProps & {
 export const UserIcon = ({ imageUrl, ...rest }: UserIconProps) => {
   return (
     <Avatar {...rest} className={cn("h-10 w-10", rest.className)}>
-      <AvatarImage src={imageUrl} alt={"ALTDWAD"} />
+      <AvatarImage src={imageUrl} alt={"ALTDWAD"} className="bg-white" />
       <AvatarFallback>
         <User className="w-1/2 h-1/2 max-w-8 max-h-8" />
       </AvatarFallback>

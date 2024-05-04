@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import useAuthListener from "@/lib/hooks/useAuthListener";
 import useAuthActions from "@/lib/hooks/useAuthActions";
 import { UserIcon } from "@/components/common/UserIcon";
+import { minidenticon } from "minidenticons";
 
 type ProfileProps = AvatarProps & {};
 

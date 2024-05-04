@@ -21,7 +21,7 @@ export const AudioSelection = () => {
           ))}
         </div>
       </CollapsibleContent>
-      <CollapsibleTrigger className="hover:bg-accent">
+      <CollapsibleTrigger className="hover:bg-accent bg-background">
         {isOpen ? <ChevronLeft /> : <ChevronRight />}
       </CollapsibleTrigger>
     </Collapsible>

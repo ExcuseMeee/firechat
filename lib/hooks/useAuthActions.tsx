@@ -1,4 +1,4 @@
-import { auth } from "@/firebaseConfig";
+import { auth, db } from "@/firebaseConfig";
 import {
   AuthError,
   createUserWithEmailAndPassword,
@@ -8,7 +8,10 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import { deleteDoc, setDoc } from "firebase/firestore";
 import { useState } from "react";
+import { typedDocumentRef } from "../firebase-utils";
+import { Profile } from "@/types";
 
 export default function useAuthActions() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +22,7 @@ export default function useAuthActions() {
       await auth.authStateReady();
       if (auth.currentUser?.isAnonymous) {
         console.log("[logout] anon user, deleting account");
+        await deleteDoc(typedDocumentRef<Profile>("profiles", auth.currentUser.uid))
         await deleteUser(auth.currentUser);
       }
       await signOut(auth);
@@ -60,6 +64,11 @@ export default function useAuthActions() {
       await updateProfile(result.user, {
         displayName: username,
       });
+      // create profile document in firestore
+      await setDoc(typedDocumentRef<Profile>("profiles", result.user.uid), {
+        username: username,
+        isAnon: false
+      })
     } catch (error) {
       console.log("[signup] error occured", (error as AuthError).message);
       throw new Error("Sign Up Failed");
@@ -81,6 +90,11 @@ export default function useAuthActions() {
       await updateProfile(result.user, {
         displayName: username,
       });
+      // create profile document in firestore
+      await setDoc(typedDocumentRef<Profile>("profiles", result.user.uid), {
+        username: username,
+        isAnon: true
+      })
     } catch (error) {
       console.log("[anonLogin] error occured", (error as AuthError).message);
       throw new Error("Anonlogin failed");
