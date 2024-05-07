@@ -14,9 +14,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import useAuthActions from "@/lib/hooks/useAuthActions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { KeyRound, Loader2 } from "lucide-react";
+import { signUp } from "@/lib/firebaseAuth";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -28,7 +35,8 @@ type FormData = z.infer<typeof formSchema>;
 
 export const SignUp = () => {
   const router = useRouter();
-  const { signUp, isLoading } = useAuthActions();
+  // const { signUp, isLoading } = useAuthActions();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -41,10 +49,13 @@ export const SignUp = () => {
 
   async function onSubmit(values: FormData) {
     try {
+      setIsLoading(true);
       await signUp(values.email, values.password, values.username);
       router.push("/chat");
     } catch (error) {
       console.log("[onSubmit] signup failed", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -52,9 +63,7 @@ export const SignUp = () => {
     <Card>
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
-        <CardDescription>
-          Create an account to start chatting
-        </CardDescription>
+        <CardDescription>Create an account to start chatting</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

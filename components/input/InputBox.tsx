@@ -21,7 +21,7 @@ export const InputBox = () => {
 
     const messageCollection = typedCollectionRef<Msg>("test");
     await addDoc(messageCollection, {
-      senderId: "TESTING",
+      senderId: user.uid,
       payload: input,
       timestamp: new Date().getTime(),
     });
@@ -29,7 +29,7 @@ export const InputBox = () => {
   }
 
   return (
-    <div className="flex h-fit max-h-24 rounded-md my-4 mb-8 p-1 bg-lighter">
+    <div className="flex h-fit max-h-24 rounded-md my-4 mb-8 p-1 px-3 bg-lighter">
       <ScrollArea className="h-full flex-grow">
         <div className="flex items-center flex-wrap mx-2">
           {input.map((src, i) => (

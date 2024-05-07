@@ -11,21 +11,21 @@ export const ChatFeed = () => {
   const { feed } = useChatContext();
 
   useEffect(() => {
-    if (feed.length === 0) return;
-    const scrollArea = ref.current;
-    if (scrollArea) {
-      // black magic. if it breaks use div instead of ScrollArea for scrolling
-      scrollArea.children[1].scrollTop = scrollArea.children[1].scrollHeight;
-    }
+    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth" });
   }, [feed]);
 
   return (
-    <ScrollArea
-      ref={ref}
-      className="h-[300px] overflow-y-auto flex-grow"
-    >
+    <ScrollArea className="h-[300px] overflow-y-auto flex-grow">
+      <button
+        onClick={() => {
+          if (ref.current) ref.current.scrollIntoView({ behavior: "smooth" });
+        }}
+      >
+        Scroll
+      </button>
       <MessageBacklog />
       <LiveMessages />
+      <div ref={ref}></div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>
   );

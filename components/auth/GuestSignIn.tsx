@@ -2,7 +2,13 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import {
   Form,
@@ -12,10 +18,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import useAuthActions from "@/lib/hooks/useAuthActions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2, User } from "lucide-react";
+import { anonymousLogin } from "@/lib/firebaseAuth";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(1, { message: "Invalid Username" }),
@@ -25,7 +32,8 @@ type FormData = z.infer<typeof formSchema>;
 
 export const GuestSignIn = () => {
   const router = useRouter();
-  const { isLoading, anonymousLogin } = useAuthActions();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -36,10 +44,13 @@ export const GuestSignIn = () => {
 
   async function onSubmit(values: FormData) {
     try {
+      setIsLoading(true);
       await anonymousLogin(values.username);
       router.push("/chat");
     } catch (error) {
       console.log("[onSubmit] failed", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { typedCollectionRef } from "@/lib/firebase-utils";
-import { Msg } from "@/types";
+import { typedCollectionRef, typedDocumentRef } from "@/lib/firebase-utils";
+import { Firebase_Msg, Msg, Profile } from "@/types";
 import {
   DocumentData,
   QueryDocumentSnapshot,
+  getDoc,
   getDocs,
   limit,
   onSnapshot,
@@ -25,15 +26,15 @@ type ChatContextType = {
 const ChatContext = createContext<ChatContextType | null>(null);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  // const messagesCollection = typedCollectionRef<Msg>("messages");
-  const messagesCollection = typedCollectionRef<Msg>("test");
+  // const messagesCollection = typedCollectionRef<Firebase_Msg>("messages");
+  const messagesCollection = typedCollectionRef<Firebase_Msg>("test");
 
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<
-    Msg,
+    Firebase_Msg,
     DocumentData
   > | null>(null);
   const [firstVisible, setFirstVisible] = useState<QueryDocumentSnapshot<
-    Msg,
+    Firebase_Msg,
     DocumentData
   > | null>(null);
 
@@ -42,6 +43,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const [feed, setFeed] = useState<Msg[]>([]); // [oldest, ... , newest]
   const [isFeedLoading, setIsFeedLoading] = useState(true);
+
+  async function getAccountUsername(userId: string) {
+    const profileDoc = await getDoc(
+      typedDocumentRef<Profile>("profiles", userId)
+    );
+    if (profileDoc.exists()) return profileDoc.data().username;
+    else return "(Unnamed)";
+  }
 
   async function getInitialBatch() {
     // (first)newest -> ... -> (last)oldest
@@ -55,7 +64,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setLastVisible(lastVisibleDoc);
     setFirstVisible(firstVisibleDoc);
 
-    const initialBatch = snapshot.docs.map((docSnap) => docSnap.data()); // [newest, ... , oldest ]
+    // [newest, ... , oldest ]
+    const initialBatch: Msg[] = await Promise.all(
+      snapshot.docs.map(async (docSnap) => {
+        const { senderId, ...rest } = docSnap.data();
+        const username = await getAccountUsername(senderId);
+        return { username, ...rest };
+      })
+    );
     setBacklog(initialBatch.toReversed()); // [oldest, ... , newest]
   }
 
@@ -73,8 +89,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
     setLastVisible(lastVisibleDoc);
 
-    // nextBatch contains older messages
-    const nextBatch = snapshot.docs.map((docSnap) => docSnap.data()); // [newest, ..., oldest]
+    // nextBatch contains older messages [newest, ..., oldest]
+    const nextBatch: Msg[] = await Promise.all(
+      snapshot.docs.map(async (docSnap) => {
+        const { senderId, ...rest } = docSnap.data();
+        const username = await getAccountUsername(senderId);
+        return { username, ...rest };
+      })
+    );
 
     // [(next)oldest, ... , (next)newest] + [(cur)oldest, ... , (cur)newest ]
     setBacklog((curBacklog) => [...nextBatch.toReversed(), ...curBacklog]);
@@ -89,11 +111,20 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       startAfter(firstVisible ? firstVisible : new Date().getTime())
     );
 
-    return onSnapshot(q, (snapshot) => {
-      let messages: Msg[] = [];
+    return onSnapshot(q, async (snapshot) => {
+      let firebase_messages: Firebase_Msg[] = [];
       snapshot.forEach((docSnap) => {
-        messages.push(docSnap.data());
+        firebase_messages.push(docSnap.data());
       });
+
+      const messages: Msg[] = await Promise.all(
+        firebase_messages.map(async (msg) => {
+          const { senderId, ...rest } = msg;
+          const username = await getAccountUsername(senderId);
+          return { username, ...rest };
+        })
+      );
+
       // console.log("[Listener] feed...", messages);
       setFeed(messages);
     });

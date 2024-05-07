@@ -14,9 +14,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import useAuthActions from "@/lib/hooks/useAuthActions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Loader2, LogIn } from "lucide-react";
+import { login } from "@/lib/firebaseAuth";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -27,7 +34,8 @@ type FormData = z.infer<typeof formSchema>;
 
 export const SignIn = () => {
   const router = useRouter();
-  const { login, isLoading } = useAuthActions();
+  // const { login, isLoading } = useAuthActions();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -39,10 +47,13 @@ export const SignIn = () => {
 
   async function onSubmit(values: FormData) {
     try {
+      setIsLoading(true);
       await login(values.email, values.password);
       router.push("/chat");
     } catch (error) {
       console.log("[onSubmit] failed", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
