@@ -2,7 +2,7 @@
 
 import { typedCollectionRef } from "@/lib/firebase-utils";
 import { Button } from "@/components/ui/button";
-import { Msg } from "@/types";
+import { Firebase_Msg } from "@/types";
 import { addDoc } from "firebase/firestore";
 import { AudioIcon } from "@/components/common/AudioIcon";
 import { useInputContext } from "@/components/providers/inputProvider";
@@ -19,7 +19,7 @@ export const InputBox = () => {
     if (input.length === 0) return;
     if (!user) return;
 
-    const messageCollection = typedCollectionRef<Msg>("test");
+    const messageCollection = typedCollectionRef<Firebase_Msg>("test");
     await addDoc(messageCollection, {
       senderId: user.uid,
       payload: input,
