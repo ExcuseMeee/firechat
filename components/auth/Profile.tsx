@@ -14,7 +14,6 @@ import { AlertTriangle, LogIn, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useAuthListener from "@/lib/hooks/useAuthListener";
 import { UserIcon } from "@/components/common/UserIcon";
-import { minidenticon } from "minidenticons";
 import { logout } from "@/lib/firebaseAuth";
 
 type ProfileProps = AvatarProps & {};
@@ -25,6 +24,7 @@ export const Profile = ({ ...rest }: ProfileProps) => {
   const { user, isLoading } = useAuthListener();
 
   const imageUrl = user?.photoURL ?? "";
+  const username = user?.displayName ?? "";
 
   if (isLoading)
     return (
@@ -34,7 +34,7 @@ export const Profile = ({ ...rest }: ProfileProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
-        <UserIcon {...rest} imageUrl={imageUrl} />
+        <UserIcon {...rest} username={username} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="flex justify-center">

@@ -44,14 +44,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [feed, setFeed] = useState<Msg[]>([]); // [oldest, ... , newest]
   const [isFeedLoading, setIsFeedLoading] = useState(true);
 
-  async function getAccountUsername(userId: string) {
-    const profileDoc = await getDoc(
-      typedDocumentRef<Profile>("profiles", userId)
-    );
-    if (profileDoc.exists()) return profileDoc.data().username;
-    else return "(Unnamed)";
-  }
-
   async function getInitialBatch() {
     // (first)newest -> ... -> (last)oldest
     const q = query(messagesCollection, orderBy("timestamp", "desc"), limit(5));
@@ -128,6 +120,15 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       // console.log("[Listener] feed...", messages);
       setFeed(messages);
     });
+  }
+
+  /** return empty string if no acc username */
+  async function getAccountUsername(userId: string) {
+    const profileDoc = await getDoc(
+      typedDocumentRef<Profile>("profiles", userId)
+    );
+    if (profileDoc.exists()) return profileDoc.data().username;
+    else return "";
   }
 
   useEffect(() => {

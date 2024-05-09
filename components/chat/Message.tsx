@@ -9,12 +9,13 @@ type MessageProps = {
 };
 
 export const Message = ({ message }: MessageProps) => {
-
   return (
     <div className="flex space-x-2 items-center my-2">
-      <UserIcon imageUrl="" className="w-12 h-12" />
+      <UserIcon username={message.username} className="w-12 h-12" />
       <div className="flex flex-col flex-grow">
-        <div className="h-fit">{message.username}</div>
+        <div className="h-fit">
+          {message.username.length === 0 ? "(Not Found)" : message.username}
+        </div>
         <div className="flex flex-wrap items-center">
           <PlayAudio sounds={message.payload} />
           {message.payload.map((src, i) => (
