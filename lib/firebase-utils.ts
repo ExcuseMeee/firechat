@@ -1,7 +1,7 @@
 import { db } from "@/firebaseConfig";
 import { CollectionReference, DocumentData, DocumentReference, collection, doc } from "firebase/firestore";
 
-type CollectionNames = "messages" | "profiles" | "test";
+type CollectionNames = "messages" | "profiles" | "deleted_profiles" |"test";
 
 export function typedCollectionRef<T = DocumentData>(collectionName: CollectionNames){
   return collection(db, collectionName) as CollectionReference<T>

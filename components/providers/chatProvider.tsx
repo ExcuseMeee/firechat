@@ -1,7 +1,7 @@
 "use client";
 
 import { typedCollectionRef, typedDocumentRef } from "@/lib/firebase-utils";
-import { Firebase_Msg, Msg, Profile } from "@/types";
+import { DeletedProfile, Firebase_Msg, Msg, Profile } from "@/types";
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -122,13 +122,20 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     });
   }
 
-  /** return empty string if no acc username */
+  /** return empty string if no profile is found */
   async function getAccountUsername(userId: string) {
-    const profileDoc = await getDoc(
+    let profileDoc = await getDoc(
       typedDocumentRef<Profile>("profiles", userId)
     );
-    if (profileDoc.exists()) return profileDoc.data().username;
-    else return "";
+    if (profileDoc.exists()) {
+      return profileDoc.data().username;
+    } else {
+      profileDoc = await getDoc(
+        typedDocumentRef<DeletedProfile>("deleted_profiles", userId)
+      );
+      if (profileDoc.exists()) return profileDoc.data().username;
+      else return "";
+    }
   }
 
   useEffect(() => {

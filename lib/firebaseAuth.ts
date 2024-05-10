@@ -1,10 +1,8 @@
 import { auth } from "@/firebaseConfig";
-import { Profile } from "@/types";
+import { DeletedProfile, Profile } from "@/types";
 import { deleteDoc, setDoc } from "firebase/firestore";
 import { typedDocumentRef } from "./firebase-utils";
 import {
-  Auth,
-  AuthError,
   createUserWithEmailAndPassword,
   deleteUser,
   signInAnonymously,
@@ -94,10 +92,15 @@ export async function deleteAccount() {
     await auth.authStateReady();
     if (!auth.currentUser) return;
 
-    console.log("[deleteAccount] deleting profile doc...");
+    console.log("[deleteAccount] migrating profile doc...");
     await deleteDoc(
       typedDocumentRef<Profile>("profiles", auth.currentUser.uid)
     );
+    await setDoc(typedDocumentRef<DeletedProfile>("deleted_profiles", auth.currentUser.uid), {
+      username: auth.currentUser.displayName,
+      isAnon: auth.currentUser.isAnonymous,
+      deletedOn: new Date().getTime()
+    })
     await deleteUser(auth.currentUser);
   } catch (error) {
     console.log("[deleteAccount] error occured", error);

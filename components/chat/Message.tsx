@@ -14,7 +14,7 @@ export const Message = ({ message }: MessageProps) => {
       <UserIcon username={message.username} className="w-12 h-12" />
       <div className="flex flex-col flex-grow">
         <div className="h-fit">
-          {message.username.length === 0 ? "(Not Found)" : message.username}
+          {message.username.length === 0 ? <span className="text-gray-400">(Not Found)</span> : <span>{message.username}</span>}
         </div>
         <div className="flex flex-wrap items-center">
           <PlayAudio sounds={message.payload} />
