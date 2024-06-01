@@ -35,7 +35,6 @@ type FormData = z.infer<typeof formSchema>;
 
 export const SignUp = () => {
   const router = useRouter();
-  // const { signUp, isLoading } = useAuthActions();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({

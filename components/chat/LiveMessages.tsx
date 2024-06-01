@@ -10,7 +10,7 @@ export const LiveMessages = () => {
   if (isFeedLoading) return <div>FEED LOADING...</div>;
 
   return (
-    <div>
+    <div className="flex flex-col">
       {feed.map((message, i) => (
         <Message key={i} message={message} />
       ))}
