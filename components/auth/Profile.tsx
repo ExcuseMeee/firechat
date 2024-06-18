@@ -10,11 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, LogIn, LogOut } from "lucide-react";
+import { AlertTriangle, LogIn, LogOut, UserX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useAuthListener from "@/lib/hooks/useAuthListener";
 import { UserIcon } from "@/components/common/UserIcon";
-import { logout } from "@/lib/firebaseAuth";
+import { logout, deleteAccount } from "@/lib/firebaseAuth";
 
 type ProfileProps = AvatarProps & {};
 
@@ -49,13 +49,22 @@ export const Profile = ({ ...rest }: ProfileProps) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {user ? (
-          <DropdownMenuItem
-            onClick={() => logout()}
-            className="flex justify-center items-center space-x-1 hover:cursor-pointer"
-          >
-            <LogOut className="h-5" />
-            <span>Sign Out</span>
-          </DropdownMenuItem>
+          <div className="space-y-1">
+            <DropdownMenuItem
+              onClick={() => deleteAccount()}
+              className="flex justify-center items-center space-x-1 hover:cursor-pointer"
+            >
+              <UserX className="h-5" />
+              <span>Delete Account</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => logout()}
+              className="flex justify-center items-center space-x-1 hover:cursor-pointer"
+            >
+              <LogOut className="h-5" />
+              <span>Sign Out</span>
+            </DropdownMenuItem>
+          </div>
         ) : (
           <DropdownMenuItem
             onClick={() => router.push("/login")}

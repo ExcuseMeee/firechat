@@ -21,6 +21,7 @@ type ChatContextType = {
   getNextBatch: () => Promise<void>;
   feed: Msg[];
   isFeedLoading: boolean;
+  isNextBatchLoading: boolean;
 };
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -43,6 +44,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const [feed, setFeed] = useState<Msg[]>([]); // [oldest, ... , newest]
   const [isFeedLoading, setIsFeedLoading] = useState(true);
+
+  const [isNextBatchLoading, setIsNextBatchLoading] = useState(false);
 
   async function getInitialBatch() {
     // (first)newest -> ... -> (last)oldest
@@ -70,6 +73,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   async function getNextBatch() {
     if (!lastVisible) return;
 
+    setIsNextBatchLoading(true);
+
     const q = query(
       messagesCollection,
       orderBy("timestamp", "desc"),
@@ -92,6 +97,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
     // [(next)oldest, ... , (next)newest] + [(cur)oldest, ... , (cur)newest ]
     setBacklog((curBacklog) => [...nextBatch.toReversed(), ...curBacklog]);
+    setIsNextBatchLoading(false);
   }
 
   function attachChatListener() {
@@ -156,7 +162,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ChatContext.Provider
-      value={{ backlog, isBacklogLoading, getNextBatch, feed, isFeedLoading }}
+      value={{ backlog, isBacklogLoading, getNextBatch, feed, isFeedLoading, isNextBatchLoading }}
     >
       {children}
     </ChatContext.Provider>
