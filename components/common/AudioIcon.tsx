@@ -78,8 +78,6 @@ export const AudioIcon = ({
           <ContextMenuItem onClick={() => removeSoundFromInput(index!)}>
             Remove Sound
           </ContextMenuItem>
-        ) : iconType === "message" ? (
-          <ContextMenuItem>Placeholder</ContextMenuItem>
         ) : null}
       </ContextMenuContent>
     </ContextMenu>

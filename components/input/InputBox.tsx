@@ -6,18 +6,26 @@ import { Firebase_Msg } from "@/types";
 import { addDoc } from "firebase/firestore";
 import { AudioIcon } from "@/components/common/AudioIcon";
 import { useInputContext } from "@/components/providers/inputProvider";
-import { ScrollArea } from "../ui/scroll-area";
-import { PlayAudio } from "../common/PlayAudio";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { PlayAudio } from "@/components/common/PlayAudio";
 import { Send, Trash2 } from "lucide-react";
 import useAuthListener from "@/lib/hooks/useAuthListener";
+import { useToast } from "@/components/ui/use-toast";
 
 export const InputBox = () => {
   const { input, clearInput } = useInputContext();
   const { user, isLoading } = useAuthListener();
 
+  const { toast } = useToast();
+
   async function sendMessage() {
     if (input.length === 0) return;
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "Please Sign In",
+      });
+      return;
+    }
 
     const messageCollection = typedCollectionRef<Firebase_Msg>("test");
     await addDoc(messageCollection, {
