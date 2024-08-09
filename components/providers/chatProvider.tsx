@@ -27,8 +27,7 @@ type ChatContextType = {
 const ChatContext = createContext<ChatContextType | null>(null);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  // const messagesCollection = typedCollectionRef<Firebase_Msg>("messages");
-  const messagesCollection = typedCollectionRef<Firebase_Msg>("test");
+  const messagesCollection = typedCollectionRef<Firebase_Msg>("messages");
 
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<
     Firebase_Msg,

@@ -27,7 +27,7 @@ export const InputBox = () => {
       return;
     }
 
-    const messageCollection = typedCollectionRef<Firebase_Msg>("test");
+    const messageCollection = typedCollectionRef<Firebase_Msg>("messages");
     await addDoc(messageCollection, {
       senderId: user.uid,
       payload: input,

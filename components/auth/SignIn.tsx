@@ -28,6 +28,7 @@ import { useState } from "react";
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z.string().min(1, { message: "Invalid password" }),
+  errorMsg: z.null().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -41,6 +42,7 @@ export const SignIn = () => {
     defaultValues: {
       email: "",
       password: "",
+      errorMsg: null,
     },
   });
 
@@ -51,6 +53,7 @@ export const SignIn = () => {
       router.push("/chat");
     } catch (error) {
       console.log("[onSubmit] failed", error);
+      form.setError("errorMsg", { message: "Incorrect Email or Password" });
     } finally {
       setIsLoading(false);
     }
@@ -89,6 +92,15 @@ export const SignIn = () => {
                   <FormControl>
                     <Input placeholder="Password" type="password" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="errorMsg"
+              render={({ field }) => (
+                <FormItem>
                   <FormMessage />
                 </FormItem>
               )}
