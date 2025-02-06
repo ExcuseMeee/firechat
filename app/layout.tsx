@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/themeProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { ChatProvider } from "@/components/providers/chatProvider";
+import { SoundProvider } from "@/components/providers/soundProvider";
+import { InputProvider } from "@/components/providers/inputProvider";
 
 export const metadata: Metadata = {
   title: "Firechat",
@@ -17,7 +20,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark">
-          {children}
+          <ChatProvider>
+            <SoundProvider>
+              <InputProvider>{children}</InputProvider>
+            </SoundProvider>
+          </ChatProvider>
           <Toaster />
         </ThemeProvider>
       </body>

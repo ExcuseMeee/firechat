@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { HTMLAttributes } from "react";
 import { Profile } from "../auth/Profile";
-import Link from "next/link";
 import { Flame } from "lucide-react";
 
 type HeaderProps = HTMLAttributes<HTMLDivElement> & {};
@@ -15,12 +14,11 @@ export const Header = ({ ...rest }: HeaderProps) => {
         rest.className
       )}
     >
-      <Link href={"/"}>
-        <div className={"flex justify-center"}>
-          <Flame />
-          FIRECHAT
-        </div>
-      </Link>
+      <div className={"flex justify-center"}>
+        <Flame />
+        FIRECHAT
+      </div>
+
       <Profile className="hover:cursor-pointer m-0" />
     </header>
   );
