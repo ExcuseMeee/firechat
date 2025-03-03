@@ -50,7 +50,7 @@ export const SignIn = () => {
     try {
       setIsLoading(true);
       await login(values.email, values.password);
-      router.push("/chat");
+      router.push("/");
     } catch (error) {
       console.log("[onSubmit] failed", error);
       form.setError("errorMsg", { message: "Incorrect Email or Password" });

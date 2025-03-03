@@ -50,7 +50,7 @@ export const SignUp = () => {
     try {
       setIsLoading(true);
       await signUp(values.email, values.password, values.username);
-      router.push("/chat");
+      router.push("/");
     } catch (error) {
       console.log("[onSubmit] signup failed", error);
     } finally {

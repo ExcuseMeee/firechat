@@ -46,7 +46,7 @@ export const GuestSignIn = () => {
     try {
       setIsLoading(true);
       await anonymousLogin(values.username);
-      router.push("/chat");
+      router.push("/");
     } catch (error) {
       console.log("[onSubmit] failed", error);
     } finally {
